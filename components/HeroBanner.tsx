@@ -4,7 +4,7 @@ import React from "react";
 import { useNextSanityImage } from "next-sanity-image";
 import Img from "next/image";
 
-const HeroBanner = ({ heroBanner }: { heroBanner: Banner }) => {
+const HeroBanner: React.FC<HeroBannerProps> = ({ heroBanner }) => {
   const bannerImageProps = useNextSanityImage(client, heroBanner.image);
 
   console.log({ bannerImageProps, heroBanner });

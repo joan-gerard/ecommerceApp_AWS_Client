@@ -26,6 +26,12 @@ type HomeProps = {
   products: Product[];
   bannerData: Banner[];
 };
+type HeroBannerProps = {
+  heroBanner: Banner;
+};
+type FooterBannerProps = {
+  footerBanner: Banner;
+};
 type ProductProps = {
   product: Product;
 };

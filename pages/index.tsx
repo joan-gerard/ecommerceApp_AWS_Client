@@ -17,7 +17,7 @@ const Home: React.FC<HomeProps> = ({ products, bannerData }) => {
           <Product key={product._id} product={product} />
         ))}
       </div>
-      <FooterBanner />
+      {!!bannerData.length && <FooterBanner footerBanner={bannerData[0]} />}
     </>
   );
 };
