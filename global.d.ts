@@ -1,7 +1,10 @@
 interface Product {
+  _id: string;
   image: string;
   name: string;
-  slug: string;
+  slug: {
+    current: string;
+  };
   details: string;
   price: number;
 }
@@ -22,4 +25,7 @@ interface Banner {
 type HomeProps = {
   products: Product[];
   bannerData: Banner[];
+};
+type ProductProps = {
+  product: Product;
 };

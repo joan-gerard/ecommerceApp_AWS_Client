@@ -5,14 +5,19 @@ import { useNextSanityImage } from "next-sanity-image";
 import Img from "next/image";
 
 const HeroBanner = ({ heroBanner }: { heroBanner: Banner }) => {
-  const imageProps = useNextSanityImage(client, heroBanner.image);
+  const bannerImageProps = useNextSanityImage(client, heroBanner.image);
 
+  console.log({ bannerImageProps, heroBanner });
   return (
     <div className="hero-banner-container">
       <div>
         <p className="beats-solo">{heroBanner.smallText}</p>
         <h3>{heroBanner.midText}</h3>
-        <Img {...imageProps} alt="headphones" className="hero-banner-image" />
+        <Img
+          {...bannerImageProps}
+          alt="headphones"
+          className="hero-banner-image"
+        />
 
         <div>
           <Link href={`/product/${heroBanner.product}`}>
