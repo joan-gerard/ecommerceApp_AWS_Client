@@ -16,9 +16,6 @@ const Product: React.FC<ProductProps> = ({
     width: 250,
   };
 
-  // console.log({ image });
-  console.log({ productImageProps, product, updatedproductImageProps });
-
   return (
     <div>
       <Link href={`/product/${slug.current}`}>

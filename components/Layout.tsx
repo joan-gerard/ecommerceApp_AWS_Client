@@ -5,7 +5,6 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 
 const Layout = ({ children }: { children: ReactElement }) => {
-  console.log({ children });
   return (
     <div className="layout">
       <Head>

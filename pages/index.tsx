@@ -4,7 +4,7 @@ import { client } from "@/lib/client";
 import { Product, HeroBanner, FooterBanner } from "@/components";
 
 const Home: React.FC<HomeProps> = ({ products, bannerData }) => {
-  console.log({ products, bannerData });
+  console.log({ indexProducts: products });
   return (
     <>
       {!!bannerData.length && <HeroBanner heroBanner={bannerData[0]} />}

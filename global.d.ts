@@ -1,6 +1,11 @@
+interface Image {
+  asset: {
+    ref: string;
+  };
+}
 interface Product {
   _id: string;
-  image: string;
+  image: Image[];
   name: string;
   slug: {
     current: string;
@@ -22,6 +27,12 @@ interface Banner {
   saleTime: number;
 }
 
+interface ProductsPath {
+  slug: {
+    current: string;
+  };
+}
+
 type HomeProps = {
   products: Product[];
   bannerData: Banner[];
@@ -34,4 +45,9 @@ type FooterBannerProps = {
 };
 type ProductProps = {
   product: Product;
+};
+
+type ProductDetailsProps = {
+  product: Product;
+  similarProducts: Product[];
 };
