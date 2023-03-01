@@ -4,7 +4,7 @@ import Head from "next/head";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
-const Layout = ({ children }: { children: ReactElement }) => {
+const Layout = ({ children }: { children: ReactElement[] }) => {
   return (
     <div className="layout">
       <Head>

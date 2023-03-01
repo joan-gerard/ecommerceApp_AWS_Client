@@ -51,3 +51,16 @@ type ProductDetailsProps = {
   product: Product;
   similarProducts: Product[];
 };
+
+type ContextType = {
+  showCart: boolean;
+  // setShowCart: () => boolean;
+  cartItems: any;
+  // setCartItems: () => void;
+  totalPrice: any;
+  // setTotalPrice: () => void;
+  totalQuantities: any;
+  // setTotalQauantities: () => void;
+  qty: any;
+  // setQty: () => void;
+};
