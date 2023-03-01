@@ -10,6 +10,7 @@ import {
 
 import { client } from "../../lib/client";
 import { Product } from "@/components";
+import { useStateContext } from "../../context/stateContext";
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({
   product,
@@ -17,6 +18,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 }) => {
   const { image, name, details, price } = product;
   const [index, setIndex] = useState(0);
+
+  const { qty, increaseQty, decreaseQty, onAddToCart } = useStateContext();
 
   const productImageProps = useNextSanityImage(client, image[index]);
   const updatedproductImageProps = {
@@ -42,6 +45,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
               <Img
                 {...useNextSanityImage(client, item)}
                 alt={name}
+                key={idx}
                 className={
                   idx === index ? "small-image selected-image" : "small-image"
                 }
@@ -68,19 +72,17 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
           <div className="quantity">
             <h3>Quantity</h3>
             <p className="quantity-desc">
-              <span className="minus" onClick={() => {}}>
+              <span className="minus" onClick={decreaseQty}>
                 <AiOutlineMinus />
               </span>
-              <span className="num" onClick={() => {}}>
-                0
-              </span>
-              <span className="plus" onClick={() => {}}>
+              <span className="num">{qty}</span>
+              <span className="plus" onClick={increaseQty}>
                 <AiOutlinePlus />
               </span>
             </p>
           </div>
           <div className="buttons">
-            <button type="button" className="add-to-cart" onClick={() => {}}>
+            <button type="button" className="add-to-cart" onClick={() => onAddToCart(product, qty)}>
               Add to Cart
             </button>
             <button type="button" className="buy-now" onClick={() => {}}>

@@ -33,6 +33,23 @@ interface ProductsPath {
   };
 }
 
+interface CartItem {
+  product: Product
+  quantity: number;
+}
+
+type ContextType = {
+  showCart: boolean;
+  cartItems: any[];
+  totalPrice: number;
+  totalQuantities: any;
+  qty: number;
+
+  increaseQty: () => void;
+  decreaseQty: () => void;
+  onAddToCart: (product: Product, quantity: number) => void;
+};
+
 type HomeProps = {
   products: Product[];
   bannerData: Banner[];
@@ -50,17 +67,4 @@ type ProductProps = {
 type ProductDetailsProps = {
   product: Product;
   similarProducts: Product[];
-};
-
-type ContextType = {
-  showCart: boolean;
-  // setShowCart: () => boolean;
-  cartItems: any;
-  // setCartItems: () => void;
-  totalPrice: any;
-  // setTotalPrice: () => void;
-  totalQuantities: any;
-  // setTotalQauantities: () => void;
-  qty: any;
-  // setQty: () => void;
 };
