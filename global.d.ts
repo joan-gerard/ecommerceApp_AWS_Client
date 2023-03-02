@@ -34,13 +34,13 @@ interface ProductsPath {
 }
 
 interface CartItem {
-  product: Product
+  product: Product;
   quantity: number;
 }
 
 type ContextType = {
   showCart: boolean;
-  cartItems: any[];
+  cartItems: CartItem[];
   totalPrice: number;
   totalQuantities: any;
   qty: number;
@@ -48,6 +48,7 @@ type ContextType = {
   increaseQty: () => void;
   decreaseQty: () => void;
   onAddToCart: (product: Product, quantity: number) => void;
+  setShowCart: (arg: boolean) => void;
 };
 
 type HomeProps = {
@@ -67,4 +68,8 @@ type ProductProps = {
 type ProductDetailsProps = {
   product: Product;
   similarProducts: Product[];
+};
+
+type CartItemProps = {
+  cartItem: CartItem;
 };

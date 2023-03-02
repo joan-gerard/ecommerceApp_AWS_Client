@@ -4,6 +4,7 @@ import { toast } from "react-hot-toast";
 
 export const Context = createContext<ContextType>({
   showCart: false,
+  setShowCart: (arg: boolean) => {},
   cartItems: [],
   totalPrice: 0,
   totalQuantities: {},
@@ -33,7 +34,7 @@ export const StateContext = ({ children }: { children: any }) => {
 
   const onAddToCart = (product: Product, quantity: number) => {
     const checkIfProductInCart = cartItems?.find((item) => {
-      item.product._id === product._id;
+      return item.product._id === product._id;
     });
 
     setTotalPrice(
@@ -51,10 +52,8 @@ export const StateContext = ({ children }: { children: any }) => {
         }
         return cartProduct;
       });
-
       setCartItems(updatedCartItems);
     } else {
-      // product.quantity = quantity;
       setCartItems([...cartItems, { product, quantity }]);
     }
     toast.success(`${qty} ${product.name} added to the cart.`);
@@ -64,6 +63,7 @@ export const StateContext = ({ children }: { children: any }) => {
     <Context.Provider
       value={{
         showCart,
+        setShowCart,
         cartItems,
         totalPrice,
         totalQuantities,
