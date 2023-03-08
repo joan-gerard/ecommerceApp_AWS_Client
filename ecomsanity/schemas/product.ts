@@ -36,5 +36,20 @@ export default {
       title: 'Details',
       type: 'string',
     },
+    {
+      name: 'group',
+      title: 'Group',
+      type: 'string',
+    },
+    {
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+    },
+    {
+      name: 'subCategory',
+      title: 'subCategory',
+      type: 'string',
+    },
   ],
 }

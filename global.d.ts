@@ -12,6 +12,9 @@ interface Product {
   };
   details: string;
   price: number;
+  group: string;
+  category: string;
+  subcategory: string
 }
 
 interface Banner {
