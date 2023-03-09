@@ -8,7 +8,6 @@ const Home: React.FC<HomeProps> = ({ products, bannerData }) => {
     const records: any[] = [];
 
     products.map((item) => {
-      console.log({ item });
 
       const newItem = {
         id: item._id,
@@ -24,9 +23,9 @@ const Home: React.FC<HomeProps> = ({ products, bannerData }) => {
     return records;
   };
 
-  const res = formatData();
+  const formattedData = formatData();
 
-  console.log({ res });
+  console.log({ formattedData });
 
   return (
     <>
