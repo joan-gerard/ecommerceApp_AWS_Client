@@ -14,7 +14,7 @@ interface Product {
   price: number;
   group: string;
   category: string;
-  subcategory: string
+  subcategory: string;
 }
 
 interface Banner {
@@ -52,6 +52,7 @@ type ContextType = {
   decreaseQty: () => void;
   onAddToCart: (product: Product, quantity: number) => void;
   setShowCart: (arg: boolean) => void;
+  toggleCartItemQuantity: (id: string, value: string) => void;
 };
 
 type HomeProps = {

@@ -4,8 +4,11 @@ import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { TiDeleteOutline } from "react-icons/ti";
 import { useNextSanityImage } from "next-sanity-image";
 import { client } from "../lib/client";
+import { useStateContext } from "@/context/stateContext";
 
 const CartItem: React.FC<CartItemProps> = ({ cartItem }) => {
+  const { toggleCartItemQuantity } = useStateContext();
+
   return (
     <div className="product">
       <Img
@@ -21,11 +24,21 @@ const CartItem: React.FC<CartItemProps> = ({ cartItem }) => {
         <div className="flex bottom">
           <div>
             <p className="quantity-desc">
-              <span className="minus" onClick={() => {}}>
+              <span
+                className="minus"
+                onClick={() =>
+                  toggleCartItemQuantity(cartItem.product._id, "dec")
+                }
+              >
                 <AiOutlineMinus />
               </span>
-              <span className="num">0</span>
-              <span className="plus" onClick={() => {}}>
+              <span className="num">{cartItem.quantity}</span>
+              <span
+                className="plus"
+                onClick={() =>
+                  toggleCartItemQuantity(cartItem.product._id, "inc")
+                }
+              >
                 <AiOutlinePlus />
               </span>
             </p>

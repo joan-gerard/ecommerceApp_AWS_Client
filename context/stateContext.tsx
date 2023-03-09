@@ -1,3 +1,4 @@
+import CartItem from "@/components/CartItem";
 import product from "@/ecomsanity/schemas/product";
 import React, { useState, useEffect, useContext, createContext } from "react";
 import { toast } from "react-hot-toast";
@@ -13,6 +14,7 @@ export const Context = createContext<ContextType>({
   increaseQty: () => null,
   decreaseQty: () => null,
   onAddToCart: (product: Product, quantity: number) => null,
+  toggleCartItemQuantity: (id: string, value: string) => null,
 });
 
 export const StateContext = ({ children }: { children: any }) => {
@@ -59,6 +61,46 @@ export const StateContext = ({ children }: { children: any }) => {
     toast.success(`${qty} ${product.name} added to the cart.`);
   };
 
+  const toggleCartItemQuantity = (id: string, value: string) => {
+    const foundProduct = cartItems.find((item) => item.product._id === id);
+    const index = cartItems.findIndex((item) => item.product._id === id);
+
+    let removeFoundProduct = cartItems.filter(
+      (item) => item.product._id !== id
+    );
+
+
+    if (foundProduct !== undefined) {
+      if (value === "inc") {
+        let newCartItems = [
+          ...removeFoundProduct,
+          { ...foundProduct, quantity: foundProduct.quantity + 1 },
+        ];
+
+        setCartItems(newCartItems);
+
+        setTotalPrice(
+          (prevTotalPrice) => prevTotalPrice + foundProduct.product.price
+        );
+
+        setTotalQuantities((prevTotalQuantities) => prevTotalQuantities + 1);
+      } else if (value === "dec") {
+        if (foundProduct.quantity > 1) {
+          setCartItems([
+            ...removeFoundProduct,
+            { ...foundProduct, quantity: foundProduct.quantity - 1 },
+          ]);
+
+          setTotalPrice(
+            (prevTotalPrice) => prevTotalPrice - foundProduct.product.price
+          );
+
+          setTotalQuantities((prevTotalQuantities) => prevTotalQuantities - 1);
+        }
+      }
+    }
+  };
+
   return (
     <Context.Provider
       value={{
@@ -71,6 +113,7 @@ export const StateContext = ({ children }: { children: any }) => {
         increaseQty,
         decreaseQty,
         onAddToCart,
+        toggleCartItemQuantity,
       }}
     >
       {children}
