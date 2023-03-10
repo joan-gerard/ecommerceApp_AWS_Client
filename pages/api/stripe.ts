@@ -19,10 +19,9 @@ export default async function handler(req: any, res: any) {
           const newImg = img
             .replace(
               "image-",
-              `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/production`
+              `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/production/`
             )
             .replace("-webp", ".webp");
-
           return {
             price_data: {
               currency: "usd",
@@ -46,7 +45,7 @@ export default async function handler(req: any, res: any) {
       // Create Checkout Sessions from body params.
       const session = await stripe.checkout.sessions.create(params);
       // res.redirect(303, session.url);
-      res.status(200).json(session)
+      res.status(200).json(session);
     } catch (err) {
       res.status(err.statusCode || 500).json(err.message);
     }
