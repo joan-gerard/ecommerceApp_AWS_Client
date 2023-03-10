@@ -1,6 +1,6 @@
 interface Image {
   asset: {
-    ref: string;
+    _ref: string;
   };
 }
 interface Product {

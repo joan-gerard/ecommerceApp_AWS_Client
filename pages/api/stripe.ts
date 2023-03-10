@@ -1,18 +1,6 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(
-  req: { method: string; headers: { origin: any } },
-  res: {
-    redirect: (arg0: number, arg1: any) => void;
-    status: (arg0: number) => {
-      (): any;
-      new (): any;
-      json: { (arg0: any): void; new (): any };
-      end: { (arg0: string): void; new (): any };
-    };
-    setHeader: (arg0: string, arg1: string) => void;
-  }
-) {
+export default async function handler(req: any, res: any) {
   if (req.method === "POST") {
     try {
       const params = {
@@ -22,23 +10,43 @@ export default async function handler(
         billing_address_collection: "auto",
         shipping_options: [
           {
-            shipping_rate_free_shipping: "shr_1Mk9V5KLAhOEwgTPY2GGTyUb",
-            shipping_rate_fast_shipping: "shr_1Mk9aFKLAhOEwgTPS828A1Et",
+            shipping_rate: "shr_1Mk9V5KLAhOEwgTPY2GGTyUb",
+            // shipping_rate_fast_shipping: "shr_1Mk9aFKLAhOEwgTPS828A1Et",
           },
         ],
-        line_items: [
-          {
-            // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-            price: "{{PRICE_ID}}",
-            quantity: 1,
-          },
-        ],
+        line_items: req.body.map((item: CartItem) => {
+          const img = item.product.image[0].asset._ref;
+          const newImg = img
+            .replace(
+              "image-",
+              `https://cdn.sanity.io/images/${process.env.NEXT_PUBLIC_SANITY_PROJECT_ID}/production`
+            )
+            .replace("-webp", ".webp");
+
+          return {
+            price_data: {
+              currency: "usd",
+              product_data: {
+                name: item.product.name,
+                images: [newImg],
+              },
+              unit_amount: item.product.price * 100,
+            },
+            adjustable_quantity: {
+              enabled: true,
+              minimum: 1,
+            },
+            quantity: item.quantity,
+          };
+        }),
         success_url: `${req.headers.origin}/?success=true`,
         cancel_url: `${req.headers.origin}/?canceled=true`,
       };
+
       // Create Checkout Sessions from body params.
       const session = await stripe.checkout.sessions.create(params);
-      res.redirect(303, session.url);
+      // res.redirect(303, session.url);
+      res.status(200).json(session)
     } catch (err) {
       res.status(err.statusCode || 500).json(err.message);
     }

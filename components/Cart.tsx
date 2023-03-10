@@ -5,11 +5,12 @@ import { useNextSanityImage } from "next-sanity-image";
 import { client } from "../lib/client";
 import { AiOutlineMinus, AiOutlinePlus, AiOutlineLeft } from "react-icons/ai";
 import { TiDeleteOutline } from "react-icons/ti";
-import { Toast } from "react-hot-toast";
+import toast, { Toast } from "react-hot-toast";
 
 import { useStateContext } from "@/context/stateContext";
 import CartIsEmpty from "./CartIsEmpty";
 import CartItem from "./CartItem";
+import getStripe from "@/lib/getStripe";
 
 const Cart = () => {
   // const productImageProps = useNextSanityImage(client, image[index]);
@@ -23,7 +24,26 @@ const Cart = () => {
   const { totalPrice, totalQuantities, cartItems, setShowCart } =
     useStateContext();
 
-    console.log({totalQuantities})
+
+  const handleCheckout = async () => {
+    const stripe = await getStripe();
+    const res: Response = await fetch("/api/stripe", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cartItems),
+    });
+
+
+    if (res.status === 500) return;
+    const data = await res.json();
+
+    toast.loading("Redirecting...");
+
+
+    stripe?.redirectToCheckout({ sessionId: data.id });
+  };
 
   return (
     <div className="cart-wrapper" ref={cartRef.current}>
@@ -54,7 +74,11 @@ const Cart = () => {
               <h3>${totalPrice}</h3>
             </div>
             <div className="btn-container">
-              <button type="button" className="btn" onClick={() => {}}>
+              <button
+                type="button"
+                className="btn"
+                onClick={() => handleCheckout()}
+              >
                 Pay with Stripe
               </button>
             </div>
