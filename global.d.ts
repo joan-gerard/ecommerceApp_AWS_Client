@@ -45,7 +45,7 @@ type ContextType = {
   showCart: boolean;
   cartItems: CartItem[];
   totalPrice: number;
-  totalQuantities: any;
+  totalQuantities: number;
   qty: number;
 
   increaseQty: () => void;

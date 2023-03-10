@@ -23,6 +23,8 @@ const Cart = () => {
   const { totalPrice, totalQuantities, cartItems, setShowCart } =
     useStateContext();
 
+    console.log({totalQuantities})
+
   return (
     <div className="cart-wrapper" ref={cartRef.current}>
       <div className="cart-container">

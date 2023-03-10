@@ -4,28 +4,29 @@ import { client } from "@/lib/client";
 import { Product, HeroBanner, FooterBanner } from "@/components";
 
 const Home: React.FC<HomeProps> = ({ products, bannerData }) => {
-  const formatData = () => {
-    const records: any[] = [];
+  // const formatData = () => {
+  //   const records: any[] = [];
 
-    products.map((item) => {
+  //   products.map((item) => {
 
-      const newItem = {
-        id: item._id,
-        title: item.name,
-        brand: null,
-        description: item.details,
-        pk: item.group,
-        sk: `${item.category}#${item._id}`,
-      };
-      records.push(newItem);
-    });
+  //     const newItem = {
+  //       id: item._id,
+  //       title: item.name,
+  //       brand: null,
+  //       description: item.details,
+  //       pk: item.group,
+  //       sk: `${item.category}#${item._id}`,
+  //     };
+  //     records.push(newItem);
+  //   });
 
-    return records;
-  };
+  //   console.log({records})
+  //   return records;
+  // };
 
-  const formattedData = formatData();
+  // const formattedData = formatData();
 
-  console.log({ formattedData });
+  // console.log({ formattedData });
 
   return (
     <>
