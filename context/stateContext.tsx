@@ -15,6 +15,7 @@ export const Context = createContext<ContextType>({
   decreaseQty: () => null,
   onAddToCart: (product: Product, quantity: number) => null,
   toggleCartItemQuantity: (id: string, value: string) => null,
+  onRemove: (cartItem: CartItem) => null,
 });
 
 export const StateContext = ({ children }: { children: any }) => {
@@ -102,6 +103,23 @@ export const StateContext = ({ children }: { children: any }) => {
     }
   };
 
+  const onRemove = (cartItem: CartItem) => {
+    const updatedCartItems = cartItems.filter(
+      (item) => item.product._id != cartItem.product._id
+    );
+
+    setCartItems(updatedCartItems);
+
+    setTotalPrice(
+      (prevTotalPrice) =>
+        prevTotalPrice - cartItem.product.price * cartItem.quantity
+    );
+
+    setTotalQuantities(
+      (prevTotalQuantities) => prevTotalQuantities - cartItem.quantity
+    );
+  };
+
   return (
     <Context.Provider
       value={{
@@ -115,6 +133,7 @@ export const StateContext = ({ children }: { children: any }) => {
         decreaseQty,
         onAddToCart,
         toggleCartItemQuantity,
+        onRemove,
       }}
     >
       {children}

@@ -7,7 +7,9 @@ import { client } from "../lib/client";
 import { useStateContext } from "@/context/stateContext";
 
 const CartItem: React.FC<CartItemProps> = ({ cartItem }) => {
-  const { toggleCartItemQuantity } = useStateContext();
+  const { toggleCartItemQuantity, onRemove } = useStateContext();
+
+  console.log({cartItem})
 
   return (
     <div className="product">
@@ -43,7 +45,11 @@ const CartItem: React.FC<CartItemProps> = ({ cartItem }) => {
               </span>
             </p>
           </div>
-          <button type="button" className="remove-item" onClick={() => {}}>
+          <button
+            type="button"
+            className="remove-item"
+            onClick={() => onRemove(cartItem)}
+          >
             <TiDeleteOutline />
           </button>
         </div>
