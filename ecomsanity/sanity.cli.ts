@@ -1,5 +1,4 @@
-// import {defineCliConfig} from '@sanity/cli'
-const {defineCliConfig} = require('@sanity/cli')
+import {defineCliConfig} from '@sanity/cli'
 
 export default defineCliConfig({
   api: {
