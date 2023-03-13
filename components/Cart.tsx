@@ -1,10 +1,5 @@
 import React, { useRef } from "react";
-import Link from "next/link";
-import Img from "next/image";
-import { useNextSanityImage } from "next-sanity-image";
-import { client } from "../lib/client";
-import { AiOutlineMinus, AiOutlinePlus, AiOutlineLeft } from "react-icons/ai";
-import { TiDeleteOutline } from "react-icons/ti";
+import { AiOutlineLeft } from "react-icons/ai";
 import toast, { Toast } from "react-hot-toast";
 
 import { useStateContext } from "@/context/stateContext";

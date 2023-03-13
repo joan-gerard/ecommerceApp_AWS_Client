@@ -19,7 +19,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
   const { image, name, details, price } = product;
   const [index, setIndex] = useState(0);
 
-  const { qty, increaseQty, decreaseQty, onAddToCart, cartItems } =
+  const { qty, increaseQty, decreaseQty, onAddToCart, cartItems, setShowCart } =
     useStateContext();
 
   const productImageProps = useNextSanityImage(client, image[index]);
@@ -27,6 +27,12 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
     ...productImageProps,
     height: 250,
     width: 250,
+  };
+
+  const handleBuyNow = async (product: Product, qty: number) => {
+    onAddToCart(product, qty);
+
+    setShowCart(true);
   };
 
   return (
@@ -90,7 +96,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
             >
               Add to Cart
             </button>
-            <button type="button" className="buy-now" onClick={() => {}}>
+            <button
+              type="button"
+              className="buy-now"
+              onClick={() => handleBuyNow(product, qty)}
+            >
               Buy Now
             </button>
           </div>
@@ -120,13 +130,11 @@ export const getStaticPaths = async () => {
 
   const productsPaths: ProductsPath[] = await client.fetch(pathsQuery);
 
-
   const paths = productsPaths.map((product) => ({
     params: {
       slug: product.slug.current,
     },
   }));
-
 
   return {
     paths,
@@ -144,7 +152,6 @@ export const getStaticProps = async ({
 
   const product: Product = await client.fetch(productQuery);
   const similarProducts: Product[] = await client.fetch(similarProductsQuery);
-
 
   return {
     props: { product, similarProducts },
