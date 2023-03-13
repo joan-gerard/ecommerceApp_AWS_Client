@@ -1,6 +1,12 @@
 import CartItem from "@/components/CartItem";
 import product from "@/ecomsanity/schemas/product";
-import React, { useState, useEffect, useContext, createContext, ReactElement } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  createContext,
+  ReactElement,
+} from "react";
 import { toast } from "react-hot-toast";
 
 export const Context = createContext<ContextType>({
@@ -16,6 +22,9 @@ export const Context = createContext<ContextType>({
   onAddToCart: (product: Product, quantity: number) => null,
   toggleCartItemQuantity: (id: string, value: string) => null,
   onRemove: (cartItem: CartItem) => null,
+  setCartItems: (args: CartItem[]) => null,
+  setTotalPrice: (arg: number) => null,
+  setTotalQuantities: (arg: number) => null,
 });
 
 export const StateContext = ({ children }: { children: ReactElement }) => {
@@ -134,6 +143,9 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         onAddToCart,
         toggleCartItemQuantity,
         onRemove,
+        setCartItems,
+        setTotalPrice,
+        setTotalQuantities,
       }}
     >
       {children}

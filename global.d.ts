@@ -54,6 +54,9 @@ type ContextType = {
   setShowCart: (arg: boolean) => void;
   toggleCartItemQuantity: (id: string, value: string) => void;
   onRemove: (cartItem: CartItem) => void;
+  setCartItems: (args: CartItem[]) => void;
+  setTotalPrice: (arg: number) => void;
+  setTotalQuantities: (arg: number) => void;
 };
 
 type HomeProps = {
