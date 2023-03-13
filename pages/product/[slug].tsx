@@ -48,8 +48,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
           </div>
           <div className="small-images-container">
             {image?.map((item, idx) => (
-              // useNextSanityImage(client, item)
               <Img
+                // eslint-disable-next-line react-hooks/rules-of-hooks
                 {...useNextSanityImage(client, item)}
                 alt={name}
                 key={idx}

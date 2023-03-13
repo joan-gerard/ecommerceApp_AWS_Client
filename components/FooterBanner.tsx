@@ -34,7 +34,7 @@ const FooterBanner: React.FC<FooterBannerProps> = ({
           <p>{smallText}</p>
           <h3>{midText}</h3>
           <p>{desc}</p>
-          <Link href={`/product/${product}`}>
+          <Link href={`/product/${product}`} passHref>
             <button type="button">{buttonText}</button>
           </Link>
         </div>

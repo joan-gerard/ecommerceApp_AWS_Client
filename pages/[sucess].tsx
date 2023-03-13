@@ -13,7 +13,8 @@ const Success = () => {
     setCartItems([]);
     setTotalPrice(0);
     setTotalQuantities(0);
-    runFireworks()
+    runFireworks();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -30,7 +31,7 @@ const Success = () => {
             order@example.com
           </a>
         </p>
-        <Link href="/">
+        <Link href="/" passHref>
           <button type="button" className="btn">
             Continue Shopping
           </button>

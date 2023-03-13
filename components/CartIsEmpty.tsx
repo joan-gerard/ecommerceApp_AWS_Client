@@ -11,7 +11,7 @@ const CartIsEmpty = () => {
     <div className="empty-cart">
       <AiOutlineShopping size={150} />
       <h3>You shopping cart is empty</h3>
-      <Link href="/">
+      <Link href="/" passHref>
         <button
           type="button"
           className="btn"

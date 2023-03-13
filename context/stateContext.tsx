@@ -2,7 +2,6 @@ import CartItem from "@/components/CartItem";
 import product from "@/ecomsanity/schemas/product";
 import React, {
   useState,
-  useEffect,
   useContext,
   createContext,
   ReactElement,

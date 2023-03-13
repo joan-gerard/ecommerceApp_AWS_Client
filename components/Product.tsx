@@ -18,7 +18,7 @@ const Product: React.FC<ProductProps> = ({
 
   return (
     <div>
-      <Link href={`/product/${slug.current}`}>
+      <Link href={`/product/${slug.current}`} passHref>
         <div className="product-card">
           <Img
             {...updatedproductImageProps}

@@ -19,7 +19,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ heroBanner }) => {
         />
 
         <div>
-          <Link href={`/product/${heroBanner.product}`}>
+          <Link href={`/product/${heroBanner.product}`} passHref>
             <button type="button">{heroBanner.buttonText}</button>
           </Link>
           <div className="desc">
