@@ -1,8 +1,12 @@
 // import {defineConfig} from 'sanity'
-const {defineConfig} = require('sanity')
-import {deskTool} from 'sanity/desk'
-import {visionTool} from '@sanity/vision'
+// import {deskTool} from 'sanity/desk'
+// import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemas'
+
+const {defineConfig} = require('sanity')
+const {deskTool} = require('sanity/desk')
+const {visionTool} = require('@sanity/vision')
+// const {defineConfig} = require('sanity')
 
 export default defineConfig({
   name: 'default',
