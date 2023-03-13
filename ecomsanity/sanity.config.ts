@@ -1,4 +1,5 @@
-import {defineConfig} from 'sanity'
+// import {defineConfig} from 'sanity'
+const {defineConfig} = require('sanity')
 import {deskTool} from 'sanity/desk'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemas'
