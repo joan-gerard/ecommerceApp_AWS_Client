@@ -43,15 +43,21 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
     });
   };
 
-  const onAddToCart = (product: Product, quantity: number) => {
+  const onAddToCart = async (product: Product, quantity: number) => {
     const checkIfProductInCart = cartItems?.find((item) => {
       return item.product._id === product._id;
     });
 
-    setTotalPrice(
-      (prevTotalPrice) => prevTotalPrice + product.price * quantity
+    const updatedTotalQty = totalQuantities + quantity;
+    const updatedTotalPrice = totalPrice + product.price * quantity;
+    setTotalPrice(updatedTotalPrice);
+
+    setTotalQuantities(updatedTotalQty);
+
+    window.localStorage.setItem(
+      "totals",
+      JSON.stringify({ updatedTotalPrice, updatedTotalQty })
     );
-    setTotalQuantities((prevTotalQuantities) => prevTotalQuantities + quantity);
 
     if (checkIfProductInCart) {
       const updatedCartItems = cartItems.map((cartProduct) => {
@@ -63,8 +69,19 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         }
         return cartProduct;
       });
+
+      window.localStorage.setItem(
+        "cartItems",
+        JSON.stringify(updatedCartItems)
+      );
+
       setCartItems(updatedCartItems);
     } else {
+      window.localStorage.setItem(
+        "cartItems",
+        JSON.stringify([...cartItems, { product, quantity }])
+      );
+
       setCartItems([...cartItems, { product, quantity }]);
     }
     toast.success(`${qty} ${product.name} added to the cart.`);

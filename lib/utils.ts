@@ -1,4 +1,5 @@
 import confetti from "canvas-confetti";
+import { useState, useEffect } from "react";
 
 export const runFireworks = () => {
   const duration = 5 * 1000;
@@ -31,4 +32,14 @@ export const runFireworks = () => {
       })
     );
   }, 250);
+};
+
+export const useClientSideHydration = () => {
+  const [isClientSide, setIsClientSide] = useState(false);
+
+  useEffect(() => {
+    setIsClientSide(true);
+  }, []);
+
+  return isClientSide;
 };
