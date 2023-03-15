@@ -6,6 +6,7 @@ import { useStateContext } from "@/context/stateContext";
 import CartIsEmpty from "./CartIsEmpty";
 import CartItem from "./CartItem";
 import getStripe from "@/lib/getStripe";
+import { useClientSideHydration } from "@/lib/utils";
 
 const Cart = () => {
   // const productImageProps = useNextSanityImage(client, image[index]);
@@ -18,6 +19,24 @@ const Cart = () => {
   const cartRef = useRef();
   const { totalPrice, totalQuantities, cartItems, setShowCart } =
     useStateContext();
+
+  let storedTotals: StoredTotals | undefined;
+  let storedCartItems: CartItem[] | undefined | [];
+
+  const isClientSide = useClientSideHydration();
+
+  if (isClientSide) {
+    storedTotals = JSON.parse(window.localStorage.getItem("totals") || "{}");
+    storedCartItems = JSON.parse(
+      window.localStorage.getItem("cartItems") || "[]"
+    );
+  }
+
+  console.log({
+    storedTotals,
+    storedCartItems,
+    length: storedCartItems?.length,
+  });
 
   const handleCheckout = async () => {
     const stripe = await getStripe();
@@ -40,30 +59,34 @@ const Cart = () => {
   return (
     <div className="cart-wrapper" ref={cartRef.current}>
       <div className="cart-container">
-        <button
-          type="button"
-          className="cart-heading"
-          onClick={() => setShowCart(false)}
-        >
-          <AiOutlineLeft />
-          <span className="heading">You Cart</span>
-          <span className="cart-num-items">{totalQuantities} item(s)</span>
-        </button>
+        <div className="cart-heading">
+          <button
+            type="button"
+            className="cart-heading__back-button"
+            onClick={() => setShowCart(false)}
+          >
+            <AiOutlineLeft />
+          </button>
+          <span className="heading">Your Cart</span>
+          <span className="cart-num-items">
+            {storedTotals?.updatedTotalQty} item(s)
+          </span>
+        </div>
 
-        {cartItems.length < 1 && <CartIsEmpty />}
+        {storedCartItems?.length === 0 && <CartIsEmpty />}
 
         <div className="product-container">
-          {cartItems.length >= 1 &&
-            cartItems.map((cartItem, idx) => (
+          {storedCartItems?.length != 0 &&
+            storedCartItems?.map((cartItem, idx) => (
               <CartItem cartItem={cartItem} key={cartItem.product._id} />
             ))}
         </div>
 
-        {cartItems.length >= 1 && (
+        {storedCartItems?.length != 0 && (
           <div className="cart-bottom">
             <div className="total">
               <h3>Subtotal</h3>
-              <h3>${totalPrice}</h3>
+              <h3>${storedTotals?.updatedTotalPrice}</h3>
             </div>
             <div className="btn-container">
               <button

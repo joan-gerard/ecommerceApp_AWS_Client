@@ -41,6 +41,11 @@ interface CartItem {
   quantity: number;
 }
 
+interface StoredTotals {
+  updatedTotalPrice: number;
+  updatedTotalQty: number;
+}
+
 type ContextType = {
   showCart: boolean;
   cartItems: CartItem[];

@@ -300,15 +300,20 @@ span.text-red {
 .cart-heading {
   display: flex;
   align-items: center;
-  font-size: 18px;
-  font-weight: 500;
-  cursor: pointer;
-  gap: 2px;
-  margin-left: 10px;
+  /* font-size: 18px;
+  font-weight: 500; */
+  /* gap: 2px; */
+  /* margin-left: 10px; */
+}
+.cart-heading__back-button {
   border: none;
   background-color: transparent;
+  font-size: 22px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
-
 .cart-heading .heading {
   margin-left: 10px;
 }

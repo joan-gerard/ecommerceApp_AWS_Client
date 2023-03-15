@@ -1,23 +1,37 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { AiOutlineShopping } from "react-icons/ai";
 import Cart from "./Cart";
 
 import { useStateContext } from "../context/stateContext";
 import { useClientSideHydration } from "@/lib/utils";
+import CartItem from "./CartItem";
 
 const Navbar = () => {
-  const { showCart, setShowCart, totalQuantities } = useStateContext();
+  const { showCart, setShowCart, totalQuantities, setCartItems, cartItems } = useStateContext();
 
-  let parsedStorageTotals;
+  let storedTotals;
+  let storedCartItems: CartItem[];
 
   const isClientSide = useClientSideHydration();
 
   if (isClientSide) {
-    parsedStorageTotals = JSON.parse(
-      window.localStorage.getItem("totals") || "{}"
+    storedTotals = JSON.parse(window.localStorage.getItem("totals") || "{}");
+    storedCartItems = JSON.parse(
+      window.localStorage.getItem("cartItems") || "[]"
     );
   }
+
+  const handleShowCart = () => {
+    setCartItems(storedCartItems)
+    setShowCart(true)
+  };
+
+  // useEffect(() => {
+  // }, [])
+
+  console.log('NAVBAR', cartItems)
+  
 
   return (
     <div className="navbar-container">
@@ -28,12 +42,12 @@ const Navbar = () => {
       <button
         type="button"
         className="cart-icon"
-        onClick={() => setShowCart(true)}
+        onClick={() => handleShowCart()}
       >
         <AiOutlineShopping />
         <span className="cart-item-qty">
-          {parsedStorageTotals?.updatedTotalQty > 0
-            ? parsedStorageTotals?.updatedTotalQty
+          {storedTotals?.updatedTotalQty > 0
+            ? storedTotals?.updatedTotalQty
             : 0}
         </span>
       </button>
