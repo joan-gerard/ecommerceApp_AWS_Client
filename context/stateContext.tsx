@@ -44,23 +44,48 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
   };
 
   const onAddToCart = async (product: Product, quantity: number) => {
-    const checkIfProductInCart = cartItems?.find((item) => {
+    // GET existing data
+    const storedTotals = JSON.parse(
+      window.localStorage.getItem("totals") || "{}"
+    );
+    const storedCartItems: CartItem[] = JSON.parse(
+      window.localStorage.getItem("cartItems") || "[]"
+    );
+
+    console.log({ storedTotals });
+
+    const checkIfProductInCart = storedCartItems?.find((item) => {
       return item.product._id === product._id;
     });
 
-    const updatedTotalQty = totalQuantities + quantity;
-    const updatedTotalPrice = totalPrice + product.price * quantity;
-    setTotalPrice(updatedTotalPrice);
 
-    setTotalQuantities(updatedTotalQty);
+    // check that storedTotals is not an empty object (when adding first product)...
+    //...in which case use an intial state of 0
+    const TEST =
+      Object.keys(storedTotals).length === 0
+        ? { updatedTotalPrice: 0, updatedTotalQty: 0 }
+        : storedTotals;
+
+    console.log({ TEST });
+
+    // add new totals to existing totals
+    const updatedTotalQty = TEST.updatedTotalQty + quantity;
+    const updatedTotalPrice =
+    TEST.updatedTotalPrice + product.price * quantity;
 
     window.localStorage.setItem(
       "totals",
       JSON.stringify({ updatedTotalPrice, updatedTotalQty })
     );
 
+    // setTotalPrice(
+    //   isNaN(updatedTotalPrice) ? product.price * quantity : updatedTotalPrice
+    // );
+    // setTotalQuantities(updatedTotalQty === null ? quantity : updatedTotalQty);
+
     if (checkIfProductInCart) {
-      const updatedCartItems = cartItems.map((cartProduct) => {
+      console.log("checkIfProductInCart: true");
+      const updatedCartItems = storedCartItems.map((cartProduct) => {
         if (cartProduct.product._id === product._id) {
           return {
             ...cartProduct,
@@ -75,14 +100,19 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         JSON.stringify(updatedCartItems)
       );
 
-      setCartItems(updatedCartItems);
+      // setCartItems(updatedCartItems);
     } else {
+      console.log("checkIfProductInCart: false");
+      console.log("cartItems before", { cartItems, product, qty });
+
+      // merge new product with existing daat
       window.localStorage.setItem(
         "cartItems",
-        JSON.stringify([...cartItems, { product, quantity }])
+        JSON.stringify([...storedCartItems, { product, quantity }])
       );
+      console.log("cartItems after", { cartItems, product, qty });
 
-      setCartItems([...cartItems, { product, quantity }]);
+      // setCartItems([...cartItems, { product, quantity }]);
     }
     toast.success(`${qty} ${product.name} added to the cart.`);
   };

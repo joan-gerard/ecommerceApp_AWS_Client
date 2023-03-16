@@ -43,7 +43,7 @@ interface CartItem {
 
 interface StoredTotals {
   updatedTotalPrice: number;
-  updatedTotalQty: number;
+  updatedTotalQty: number ;
 }
 
 type ContextType = {

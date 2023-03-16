@@ -4,30 +4,6 @@ import { client } from "@/lib/client";
 import { Product, HeroBanner, FooterBanner } from "@/components";
 
 const Home: React.FC<HomeProps> = ({ products, bannerData }) => {
-  // const formatData = () => {
-  //   const records: any[] = [];
-
-  //   products.map((item) => {
-
-  //     const newItem = {
-  //       id: item._id,
-  //       title: item.name,
-  //       brand: null,
-  //       description: item.details,
-  //       pk: item.group,
-  //       sk: `${item.category}#${item._id}`,
-  //     };
-  //     records.push(newItem);
-  //   });
-
-  //   console.log({records})
-  //   return records;
-  // };
-
-  // const formattedData = formatData();
-
-  // console.log({ formattedData });
-
   return (
     <>
       {!!bannerData.length && <HeroBanner heroBanner={bannerData[0]} />}
