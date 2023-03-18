@@ -4,8 +4,6 @@ import { AiOutlineShopping } from "react-icons/ai";
 import Cart from "./Cart";
 
 import { useStateContext } from "../context/stateContext";
-import { useClientSideHydration } from "@/lib/utils";
-import CartItem from "./CartItem";
 
 const Navbar = () => {
   const { showCart, setShowCart, totalQuantities } = useStateContext();

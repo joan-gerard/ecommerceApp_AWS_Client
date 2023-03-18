@@ -20,18 +20,6 @@ const Cart = () => {
   const { totalPrice, totalQuantities, cartItems, setShowCart } =
     useStateContext();
 
-  // let storedTotals: StoredTotals | undefined;
-  // let storedCartItems: CartItem[] | undefined | [];
-
-  // const isClientSide = useClientSideHydration();
-
-  // if (isClientSide) {
-  //   storedTotals = JSON.parse(window.localStorage.getItem("totals") || "{}");
-  //   storedCartItems = JSON.parse(
-  //     window.localStorage.getItem("cartItems") || "[]"
-  //   );
-  // }
-
   const handleCheckout = async () => {
     const stripe = await getStripe();
     const res: Response = await fetch("/api/stripe", {
@@ -62,9 +50,7 @@ const Cart = () => {
             <AiOutlineLeft />
           </button>
           <span className="heading">Your Cart</span>
-          <span className="cart-num-items">
-            {totalQuantities} item(s)
-          </span>
+          <span className="cart-num-items">{totalQuantities} item(s)</span>
         </div>
 
         {cartItems?.length === 0 && <CartIsEmpty />}

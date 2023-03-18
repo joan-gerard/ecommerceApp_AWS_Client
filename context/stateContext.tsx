@@ -36,28 +36,12 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
   const [totalQuantities, setTotalQuantities] = useState(0);
   const [qty, setQty] = useState(1);
 
-  console.log("STATE CONTEXT");
-
-  // const storedTotals = useRef<StoredTotals>();
-  // const storedCartItems = useRef<CartItem[]>();
-
-  // const isClientSide = useClientSideHydration();
-
   useEffect(() => {
-    // storedTotals.current = JSON.parse(
-    //   window.localStorage.getItem("totals") || "{}"
-    // );
-
-    // storedCartItems.current = JSON.parse(
-    //   window.localStorage.getItem("cartItems") || "[]"
-    // );
     setCartItems(JSON.parse(window.localStorage.getItem("cartItems") || "[]"));
 
     const { updatedTotalQty, updatedTotalPrice }: StoredTotals = JSON.parse(
       window.localStorage.getItem("totals") || "{}"
     );
-
-    console.log({ updatedTotalPrice, updatedTotalQty });
 
     setTotalQuantities(
       updatedTotalQty === undefined || updatedTotalQty < 1 ? 0 : updatedTotalQty
@@ -80,23 +64,6 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
   };
 
   const onAddToCart = async (product: Product, quantity: number) => {
-    // GET existing data
-    // const storedTotals = JSON.parse(
-    //   window.localStorage.getItem("totals") || "{}"
-    // );
-    // const storedCartItems: CartItem[] = JSON.parse(
-    //   window.localStorage.getItem("cartItems") || "[]"
-    // );
-    console.log({ totalQuantities, totalPrice, cartItems });
-
-    // check that storedTotals is not an empty object (when adding first product)...
-    //...in which case use an intial state of 0
-    // const checkedStoredTotals =
-    //   Object.keys(storedTotals).length === 0
-    //     ? { updatedTotalPrice: 0, updatedTotalQty: 0 }
-    //     : storedTotals;
-
-    // add new totals to existing totals
     const updatedTotalQty: number = totalQuantities + quantity;
     const updatedTotalPrice = totalPrice + product.price * quantity;
 
@@ -113,7 +80,6 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
     });
 
     if (checkIfProductInCart) {
-      console.log("checkIfProductInCart: true");
       const updatedCartItems = cartItems.map((cartProduct) => {
         if (cartProduct.product._id === product._id) {
           return {
@@ -131,15 +97,10 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
 
       setCartItems(updatedCartItems);
     } else {
-      console.log("checkIfProductInCart: false");
-      console.log("cartItems before", { cartItems, product, qty });
-
-      // merge new product with existing daat
       window.localStorage.setItem(
         "cartItems",
         JSON.stringify([...cartItems, { product, quantity }])
       );
-      // console.log("cartItems after", { cartItems, product, qty });
 
       setCartItems([...cartItems, { product, quantity }]);
     }
@@ -226,7 +187,6 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
     const updatedCartItems = cartItems.filter(
       (item) => item.product._id != cartItem.product._id
     );
-    console.log({ updatedCartItems });
 
     window.localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     setCartItems(updatedCartItems);
