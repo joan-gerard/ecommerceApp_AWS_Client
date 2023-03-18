@@ -8,22 +8,10 @@ import { useClientSideHydration } from "@/lib/utils";
 import CartItem from "./CartItem";
 
 const Navbar = () => {
-  const {
-    showCart,
-    setShowCart,
-  } = useStateContext();
+  const { showCart, setShowCart, totalQuantities } = useStateContext();
 
-  let storedTotals: StoredTotals | undefined;
-
-  const isClientSide = useClientSideHydration();
-
-  if (isClientSide) {
-    storedTotals = JSON.parse(window.localStorage.getItem("totals") || "{}");
-    console.log("isClientSide", {
-      storedTotals: storedTotals?.updatedTotalQty,
-    });
-  }
-
+  const dispalyTotalQty =
+    totalQuantities === undefined || totalQuantities < 1 ? 0 : totalQuantities;
   return (
     <div className="navbar-container">
       <p className="logo">
@@ -36,11 +24,9 @@ const Navbar = () => {
         onClick={() => setShowCart(true)}
       >
         <AiOutlineShopping />
-        <span className="cart-item-qty">
-          {storedTotals?.updatedTotalQty === undefined
-            ? 0
-            : storedTotals?.updatedTotalQty}
-        </span>
+        {dispalyTotalQty != 0 && (
+          <span className="cart-item-qty">{dispalyTotalQty}</span>
+        )}
       </button>
 
       {showCart && <Cart />}

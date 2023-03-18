@@ -1,10 +1,13 @@
 import CartItem from "@/components/CartItem";
 import product from "@/ecomsanity/schemas/product";
+import { useClientSideHydration } from "@/lib/utils";
 import React, {
   useState,
   useContext,
   createContext,
   ReactElement,
+  useEffect,
+  useRef,
 } from "react";
 import { toast } from "react-hot-toast";
 
@@ -33,6 +36,39 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
   const [totalQuantities, setTotalQuantities] = useState(0);
   const [qty, setQty] = useState(1);
 
+  console.log("STATE CONTEXT");
+
+  // const storedTotals = useRef<StoredTotals>();
+  // const storedCartItems = useRef<CartItem[]>();
+
+  // const isClientSide = useClientSideHydration();
+
+  useEffect(() => {
+    // storedTotals.current = JSON.parse(
+    //   window.localStorage.getItem("totals") || "{}"
+    // );
+
+    // storedCartItems.current = JSON.parse(
+    //   window.localStorage.getItem("cartItems") || "[]"
+    // );
+    setCartItems(JSON.parse(window.localStorage.getItem("cartItems") || "[]"));
+
+    const { updatedTotalQty, updatedTotalPrice }: StoredTotals = JSON.parse(
+      window.localStorage.getItem("totals") || "{}"
+    );
+
+    console.log({ updatedTotalPrice, updatedTotalQty });
+
+    setTotalQuantities(
+      updatedTotalQty === undefined || updatedTotalQty < 1 ? 0 : updatedTotalQty
+    );
+    setTotalPrice(
+      updatedTotalPrice === undefined || updatedTotalPrice < 1
+        ? 0
+        : updatedTotalPrice
+    );
+  }, []);
+
   const increaseQty = () => {
     setQty((prevQty) => prevQty + 1);
   };
@@ -45,47 +81,40 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
 
   const onAddToCart = async (product: Product, quantity: number) => {
     // GET existing data
-    const storedTotals = JSON.parse(
-      window.localStorage.getItem("totals") || "{}"
-    );
-    const storedCartItems: CartItem[] = JSON.parse(
-      window.localStorage.getItem("cartItems") || "[]"
-    );
-
-    console.log({ storedTotals });
-
-    const checkIfProductInCart = storedCartItems?.find((item) => {
-      return item.product._id === product._id;
-    });
-
+    // const storedTotals = JSON.parse(
+    //   window.localStorage.getItem("totals") || "{}"
+    // );
+    // const storedCartItems: CartItem[] = JSON.parse(
+    //   window.localStorage.getItem("cartItems") || "[]"
+    // );
+    console.log({ totalQuantities, totalPrice, cartItems });
 
     // check that storedTotals is not an empty object (when adding first product)...
     //...in which case use an intial state of 0
-    const TEST =
-      Object.keys(storedTotals).length === 0
-        ? { updatedTotalPrice: 0, updatedTotalQty: 0 }
-        : storedTotals;
-
-    console.log({ TEST });
+    // const checkedStoredTotals =
+    //   Object.keys(storedTotals).length === 0
+    //     ? { updatedTotalPrice: 0, updatedTotalQty: 0 }
+    //     : storedTotals;
 
     // add new totals to existing totals
-    const updatedTotalQty = TEST.updatedTotalQty + quantity;
-    const updatedTotalPrice =
-    TEST.updatedTotalPrice + product.price * quantity;
+    const updatedTotalQty: number = totalQuantities + quantity;
+    const updatedTotalPrice = totalPrice + product.price * quantity;
 
     window.localStorage.setItem(
       "totals",
       JSON.stringify({ updatedTotalPrice, updatedTotalQty })
     );
 
-    // setTotalPrice(
-    //   isNaN(updatedTotalPrice) ? product.price * quantity : updatedTotalPrice
-    // );
-    // setTotalQuantities(updatedTotalQty === null ? quantity : updatedTotalQty);
+    setTotalQuantities(updatedTotalQty);
+    setTotalPrice(updatedTotalPrice);
+
+    const checkIfProductInCart = cartItems?.find((item) => {
+      return item.product._id === product._id;
+    });
 
     if (checkIfProductInCart) {
       console.log("checkIfProductInCart: true");
-      const updatedCartItems = storedCartItems.map((cartProduct) => {
+      const updatedCartItems = cartItems.map((cartProduct) => {
         if (cartProduct.product._id === product._id) {
           return {
             ...cartProduct,
@@ -100,7 +129,7 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         JSON.stringify(updatedCartItems)
       );
 
-      // setCartItems(updatedCartItems);
+      setCartItems(updatedCartItems);
     } else {
       console.log("checkIfProductInCart: false");
       console.log("cartItems before", { cartItems, product, qty });
@@ -108,11 +137,11 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
       // merge new product with existing daat
       window.localStorage.setItem(
         "cartItems",
-        JSON.stringify([...storedCartItems, { product, quantity }])
+        JSON.stringify([...cartItems, { product, quantity }])
       );
-      console.log("cartItems after", { cartItems, product, qty });
+      // console.log("cartItems after", { cartItems, product, qty });
 
-      // setCartItems([...cartItems, { product, quantity }]);
+      setCartItems([...cartItems, { product, quantity }]);
     }
     toast.success(`${qty} ${product.name} added to the cart.`);
   };
@@ -130,13 +159,31 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
           return item;
         });
 
-        setCartItems(updatedCartItems);
-
-        setTotalPrice(
-          (prevTotalPrice) => prevTotalPrice + foundProduct.product.price
+        window.localStorage.setItem(
+          "cartItems",
+          JSON.stringify(updatedCartItems)
         );
 
-        setTotalQuantities((prevTotalQuantities) => prevTotalQuantities + 1);
+        setCartItems(updatedCartItems);
+
+        const newTotalQty = updatedCartItems.reduce((a, b) => {
+          return a + b.quantity;
+        }, 0);
+
+        const newTotalPrice = updatedCartItems.reduce((a, b) => {
+          return a + b.product.price * b.quantity;
+        }, 0);
+
+        window.localStorage.setItem(
+          "totals",
+          JSON.stringify({
+            updatedTotalPrice: newTotalPrice,
+            updatedTotalQty: newTotalQty,
+          })
+        );
+
+        setTotalPrice(newTotalPrice);
+        setTotalQuantities(newTotalQty);
       } else if (value === "dec") {
         if (foundProduct.quantity > 1) {
           const updatedCartItems = cartItems.map((item) => {
@@ -145,14 +192,31 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
             }
             return item;
           });
+          window.localStorage.setItem(
+            "cartItems",
+            JSON.stringify(updatedCartItems)
+          );
 
           setCartItems(updatedCartItems);
 
-          setTotalPrice(
-            (prevTotalPrice) => prevTotalPrice - foundProduct.product.price
+          const newTotalQty = updatedCartItems.reduce((a, b) => {
+            return a + b.quantity;
+          }, 0);
+
+          const newTotalPrice = updatedCartItems.reduce((a, b) => {
+            return a + b.product.price * b.quantity;
+          }, 0);
+
+          window.localStorage.setItem(
+            "totals",
+            JSON.stringify({
+              updatedTotalPrice: newTotalPrice,
+              updatedTotalQty: newTotalQty,
+            })
           );
 
-          setTotalQuantities((prevTotalQuantities) => prevTotalQuantities - 1);
+          setTotalPrice(newTotalPrice);
+          setTotalQuantities(newTotalQty);
         }
       }
     }
@@ -162,17 +226,29 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
     const updatedCartItems = cartItems.filter(
       (item) => item.product._id != cartItem.product._id
     );
+    console.log({ updatedCartItems });
 
+    window.localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     setCartItems(updatedCartItems);
 
-    setTotalPrice(
-      (prevTotalPrice) =>
-        prevTotalPrice - cartItem.product.price * cartItem.quantity
+    const newTotalQty = updatedCartItems.reduce((a, b) => {
+      return a + b.quantity;
+    }, 0);
+
+    const newTotalPrice = updatedCartItems.reduce((a, b) => {
+      return a + b.product.price * b.quantity;
+    }, 0);
+
+    window.localStorage.setItem(
+      "totals",
+      JSON.stringify({
+        updatedTotalPrice: newTotalPrice,
+        updatedTotalQty: newTotalQty,
+      })
     );
 
-    setTotalQuantities(
-      (prevTotalQuantities) => prevTotalQuantities - cartItem.quantity
-    );
+    setTotalQuantities(newTotalQty);
+    setTotalPrice(newTotalPrice);
   };
 
   return (

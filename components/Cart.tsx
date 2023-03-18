@@ -20,23 +20,17 @@ const Cart = () => {
   const { totalPrice, totalQuantities, cartItems, setShowCart } =
     useStateContext();
 
-  let storedTotals: StoredTotals | undefined;
-  let storedCartItems: CartItem[] | undefined | [];
+  // let storedTotals: StoredTotals | undefined;
+  // let storedCartItems: CartItem[] | undefined | [];
 
-  const isClientSide = useClientSideHydration();
+  // const isClientSide = useClientSideHydration();
 
-  if (isClientSide) {
-    storedTotals = JSON.parse(window.localStorage.getItem("totals") || "{}");
-    storedCartItems = JSON.parse(
-      window.localStorage.getItem("cartItems") || "[]"
-    );
-  }
-
-  console.log({
-    storedTotals,
-    storedCartItems,
-    length: storedCartItems?.length,
-  });
+  // if (isClientSide) {
+  //   storedTotals = JSON.parse(window.localStorage.getItem("totals") || "{}");
+  //   storedCartItems = JSON.parse(
+  //     window.localStorage.getItem("cartItems") || "[]"
+  //   );
+  // }
 
   const handleCheckout = async () => {
     const stripe = await getStripe();
@@ -69,24 +63,24 @@ const Cart = () => {
           </button>
           <span className="heading">Your Cart</span>
           <span className="cart-num-items">
-            {storedTotals?.updatedTotalQty} item(s)
+            {totalQuantities} item(s)
           </span>
         </div>
 
-        {storedCartItems?.length === 0 && <CartIsEmpty />}
+        {cartItems?.length === 0 && <CartIsEmpty />}
 
         <div className="product-container">
-          {storedCartItems?.length != 0 &&
-            storedCartItems?.map((cartItem, idx) => (
+          {cartItems?.length != 0 &&
+            cartItems?.map((cartItem, idx) => (
               <CartItem cartItem={cartItem} key={cartItem.product._id} />
             ))}
         </div>
 
-        {storedCartItems?.length != 0 && (
+        {cartItems?.length != 0 && (
           <div className="cart-bottom">
             <div className="total">
               <h3>Subtotal</h3>
-              <h3>${storedTotals?.updatedTotalPrice}</h3>
+              <h3>${totalPrice}</h3>
             </div>
             <div className="btn-container">
               <button

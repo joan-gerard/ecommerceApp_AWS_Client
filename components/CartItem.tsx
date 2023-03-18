@@ -9,6 +9,8 @@ import { useStateContext } from "@/context/stateContext";
 const CartItem: React.FC<CartItemProps> = ({ cartItem }) => {
   const { toggleCartItemQuantity, onRemove } = useStateContext();
 
+  console.log({cartItem})
+
   return (
     <div className="product">
       <Img
