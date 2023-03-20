@@ -43,3 +43,29 @@ export const useClientSideHydration = () => {
 
   return isClientSide;
 };
+
+export const handleSaveCartItems = (
+  cartItems: CartItem[],
+  cb: (arg0: CartItem[]) => void
+) => {
+  window.localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+  cb(cartItems);
+};
+
+export const handleSaveTotals = (
+  totalPrice: number,
+  totalQty: number,
+  cb1: (arg0: number) => void,
+  cb2: (arg0: number) => void
+) => {
+  window.localStorage.setItem(
+    "totals",
+    JSON.stringify({
+      updatedTotalPrice: totalPrice,
+      updatedTotalQty: totalQty,
+    })
+  );
+  cb1(totalPrice);
+  cb2(totalQty);
+};

@@ -1,13 +1,10 @@
-import CartItem from "@/components/CartItem";
-import product from "@/ecomsanity/schemas/product";
-import { useClientSideHydration } from "@/lib/utils";
+import { handleSaveCartItems, handleSaveTotals } from "@/lib/utils";
 import React, {
   useState,
   useContext,
   createContext,
   ReactElement,
   useEffect,
-  useRef,
 } from "react";
 import { toast } from "react-hot-toast";
 
@@ -67,13 +64,12 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
     const updatedTotalQty: number = totalQuantities + quantity;
     const updatedTotalPrice = totalPrice + product.price * quantity;
 
-    window.localStorage.setItem(
-      "totals",
-      JSON.stringify({ updatedTotalPrice, updatedTotalQty })
+    handleSaveTotals(
+      updatedTotalPrice,
+      updatedTotalQty,
+      setTotalPrice,
+      setTotalQuantities
     );
-
-    setTotalQuantities(updatedTotalQty);
-    setTotalPrice(updatedTotalPrice);
 
     const checkIfProductInCart = cartItems?.find((item) => {
       return item.product._id === product._id;
@@ -90,19 +86,9 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         return cartProduct;
       });
 
-      window.localStorage.setItem(
-        "cartItems",
-        JSON.stringify(updatedCartItems)
-      );
-
-      setCartItems(updatedCartItems);
+      handleSaveCartItems(updatedCartItems, setCartItems);
     } else {
-      window.localStorage.setItem(
-        "cartItems",
-        JSON.stringify([...cartItems, { product, quantity }])
-      );
-
-      setCartItems([...cartItems, { product, quantity }]);
+      handleSaveCartItems([...cartItems, { product, quantity }], setCartItems);
     }
     toast.success(`${qty} ${product.name} added to the cart.`);
   };
@@ -120,31 +106,21 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
           return item;
         });
 
-        window.localStorage.setItem(
-          "cartItems",
-          JSON.stringify(updatedCartItems)
-        );
-
-        setCartItems(updatedCartItems);
-
-        const newTotalQty = updatedCartItems.reduce((a, b) => {
-          return a + b.quantity;
-        }, 0);
+        handleSaveCartItems(updatedCartItems, setCartItems);
 
         const newTotalPrice = updatedCartItems.reduce((a, b) => {
           return a + b.product.price * b.quantity;
         }, 0);
+        const newTotalQty = updatedCartItems.reduce((a, b) => {
+          return a + b.quantity;
+        }, 0);
 
-        window.localStorage.setItem(
-          "totals",
-          JSON.stringify({
-            updatedTotalPrice: newTotalPrice,
-            updatedTotalQty: newTotalQty,
-          })
+        handleSaveTotals(
+          newTotalPrice,
+          newTotalQty,
+          setTotalPrice,
+          setTotalQuantities
         );
-
-        setTotalPrice(newTotalPrice);
-        setTotalQuantities(newTotalQty);
       } else if (value === "dec") {
         if (foundProduct.quantity > 1) {
           const updatedCartItems = cartItems.map((item) => {
@@ -153,31 +129,22 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
             }
             return item;
           });
-          window.localStorage.setItem(
-            "cartItems",
-            JSON.stringify(updatedCartItems)
-          );
 
-          setCartItems(updatedCartItems);
-
-          const newTotalQty = updatedCartItems.reduce((a, b) => {
-            return a + b.quantity;
-          }, 0);
+          handleSaveCartItems(updatedCartItems, setCartItems);
 
           const newTotalPrice = updatedCartItems.reduce((a, b) => {
             return a + b.product.price * b.quantity;
           }, 0);
+          const newTotalQty = updatedCartItems.reduce((a, b) => {
+            return a + b.quantity;
+          }, 0);
 
-          window.localStorage.setItem(
-            "totals",
-            JSON.stringify({
-              updatedTotalPrice: newTotalPrice,
-              updatedTotalQty: newTotalQty,
-            })
+          handleSaveTotals(
+            newTotalPrice,
+            newTotalQty,
+            setTotalPrice,
+            setTotalQuantities
           );
-
-          setTotalPrice(newTotalPrice);
-          setTotalQuantities(newTotalQty);
         }
       }
     }
@@ -188,8 +155,7 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
       (item) => item.product._id != cartItem.product._id
     );
 
-    window.localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-    setCartItems(updatedCartItems);
+    handleSaveCartItems(updatedCartItems, setCartItems);
 
     const newTotalQty = updatedCartItems.reduce((a, b) => {
       return a + b.quantity;
@@ -199,16 +165,12 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
       return a + b.product.price * b.quantity;
     }, 0);
 
-    window.localStorage.setItem(
-      "totals",
-      JSON.stringify({
-        updatedTotalPrice: newTotalPrice,
-        updatedTotalQty: newTotalQty,
-      })
+    handleSaveTotals(
+      newTotalPrice,
+      newTotalQty,
+      setTotalPrice,
+      setTotalQuantities
     );
-
-    setTotalQuantities(newTotalQty);
-    setTotalPrice(newTotalPrice);
   };
 
   return (
