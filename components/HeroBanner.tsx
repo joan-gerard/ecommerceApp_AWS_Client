@@ -16,6 +16,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ heroBanner }) => {
           {...bannerImageProps}
           alt="headphones"
           className="hero-banner-image"
+          priority={true}
         />
 
         <div>

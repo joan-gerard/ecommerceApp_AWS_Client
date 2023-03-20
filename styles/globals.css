@@ -79,6 +79,7 @@ span.text-red {
   transition: transform 0.4s ease;
   border: none;
   background-color: transparent;
+  margin-left: 25px;
 }
 .cart-icon:hover {
   transform: scale(1.1, 1.1);
