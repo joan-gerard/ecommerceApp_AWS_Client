@@ -1,5 +1,8 @@
 import confetti from "canvas-confetti";
 import { useState, useEffect } from "react";
+import { Auth } from "aws-amplify";
+import Axios, { Method, AxiosRequestConfig } from "axios";
+const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const runFireworks = () => {
   const duration = 5 * 1000;
@@ -68,4 +71,37 @@ export const handleSaveTotals = (
   );
   cb1(totalPrice);
   cb2(totalQty);
+};
+
+export const handleRemoveStorageItems = () => {
+  window.localStorage.removeItem("cartItems");
+  window.localStorage.removeItem("totals");
+};
+
+export const handlePlaceOrder = async (cartItems: any) => {
+  const user = await Auth.currentSession();
+  const headers = {
+    Authorization: `Bearer ${user.getIdToken().getJwtToken()}`,
+  };
+  const formattedData = await cartItems.map((item: any) => {
+    return {
+      id: item.description,
+      count: item.quantity,
+    };
+  });
+
+  const data = {
+    items: formattedData,
+  };
+
+  const requestConfig: AxiosRequestConfig = {
+    headers,
+    method: "POST",
+    url: `${baseUrl}/orders`,
+    data,
+  };
+
+  const axiosRes = await Axios.request(requestConfig);
+
+  return axiosRes;
 };

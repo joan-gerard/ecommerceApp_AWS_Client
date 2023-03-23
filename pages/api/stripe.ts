@@ -1,6 +1,17 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
-export default async function handler(req: any, res: any) {
+export default async function handler(
+  req: { method: string; body: CartItem[]; headers: { origin: any } },
+  res: {
+    status: (arg0: number) => {
+      (): any;
+      new (): any;
+      json: { (arg0: any): void; new (): any };
+      end: { (arg0: string): void; new (): any };
+    };
+    setHeader: (arg0: string, arg1: string) => void;
+  }
+) {
   if (req.method === "POST") {
     try {
       const params = {
@@ -26,7 +37,7 @@ export default async function handler(req: any, res: any) {
             price_data: {
               currency: "usd",
               product_data: {
-                name: item.product.name,
+                name: item.product._id,
                 images: [newImg],
               },
               unit_amount: item.product.price * 100,
@@ -38,14 +49,15 @@ export default async function handler(req: any, res: any) {
             quantity: item.quantity,
           };
         }),
-        success_url: `${req.headers.origin}/success`,
+        success_url: `${req.headers.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${req.headers.origin}`,
       };
-
       // Create Checkout Sessions from body params.
       const session = await stripe.checkout.sessions.create(params);
+
       // res.redirect(303, session.url);
       res.status(200).json(session);
+
     } catch (err) {
       res.status(err.statusCode || 500).json(err.message);
     }
