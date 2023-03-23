@@ -5,12 +5,15 @@ import { Auth } from "aws-amplify";
 import Axios, { Method, AxiosRequestConfig } from "axios";
 
 import { useStateContext } from "@/context/stateContext";
-import { handlePlaceOrder, handleRemoveStorageItems, runFireworks } from "@/lib/utils";
+import {
+  handlePlaceOrder,
+  handleRemoveStorageItems,
+  runFireworks,
+} from "@/lib/utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const Success = () => {
-  console.log("SUCCESS PAYMENT");
   const { setCartItems, setTotalPrice, setTotalQuantities, cartItems } =
     useStateContext();
 
@@ -18,15 +21,11 @@ const Success = () => {
 
   useEffect(() => {
     const queryString = window.location.search;
-    console.log({ queryString });
 
     const urlParams = new URLSearchParams(queryString);
-    console.log({ urlParams });
 
     const sessionID = urlParams.get("session_id");
-    console.log({ sessionID });
 
-    console.log("KEY", process.env.STRIPE_SECRET_KEY);
     const headers = {
       Authorization: `Bearer ${process.env.stripeKey}`,
     };
@@ -41,8 +40,7 @@ const Success = () => {
         (res) => res.data.data
       );
 
-      console.log({ axiosRes });
-      handlePlaceOrder(axiosRes)
+      handlePlaceOrder(axiosRes);
     };
 
     getData();
