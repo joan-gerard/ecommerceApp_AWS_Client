@@ -80,19 +80,25 @@ export const handleRemoveStorageItems = () => {
 
 export const handlePlaceOrder = async (cartItems: any) => {
   const user = await Auth.currentSession();
+  console.log({ user });
   const headers = {
     Authorization: `Bearer ${user.getIdToken().getJwtToken()}`,
   };
+  console.log({ headers });
+
   const formattedData = await cartItems.map((item: any) => {
     return {
       id: item.description,
       count: item.quantity,
     };
   });
+  console.log({ formattedData });
 
   const data = {
     items: formattedData,
   };
+
+  console.log({ data });
 
   const requestConfig: AxiosRequestConfig = {
     headers,
@@ -101,7 +107,11 @@ export const handlePlaceOrder = async (cartItems: any) => {
     data,
   };
 
+  console.log({ requestConfig });
+
   const axiosRes = await Axios.request(requestConfig);
+
+  console.log({ axiosRes });
 
   return axiosRes;
 };
