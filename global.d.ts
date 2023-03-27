@@ -51,10 +51,6 @@ type ContextType = {
   cartItems: CartItem[];
   totalPrice: number;
   totalQuantities: number;
-  qty: number;
-
-  increaseQty: () => void;
-  decreaseQty: () => void;
   onAddToCart: (product: Product, quantity: number) => void;
   setShowCart: (arg: boolean) => void;
   toggleCartItemQuantity: (id: string, value: string) => void;

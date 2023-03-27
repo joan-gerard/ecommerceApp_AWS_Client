@@ -14,10 +14,6 @@ export const Context = createContext<ContextType>({
   cartItems: [],
   totalPrice: 0,
   totalQuantities: 0,
-  qty: 1,
-
-  increaseQty: () => null,
-  decreaseQty: () => null,
   onAddToCart: (product: Product, quantity: number) => null,
   toggleCartItemQuantity: (id: string, value: string) => null,
   onRemove: (cartItem: CartItem) => null,
@@ -31,7 +27,6 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantities, setTotalQuantities] = useState(0);
-  const [qty, setQty] = useState(1);
 
   useEffect(() => {
     setCartItems(JSON.parse(window.localStorage.getItem("cartItems") || "[]"));
@@ -49,16 +44,6 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         : updatedTotalPrice
     );
   }, []);
-
-  const increaseQty = () => {
-    setQty((prevQty) => prevQty + 1);
-  };
-  const decreaseQty = () => {
-    setQty((prevQty) => {
-      if (prevQty - 1 < 1) return 1;
-      return prevQty - 1;
-    });
-  };
 
   const onAddToCart = async (product: Product, quantity: number) => {
     const updatedTotalQty: number = totalQuantities + quantity;
@@ -90,7 +75,7 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
     } else {
       handleSaveCartItems([...cartItems, { product, quantity }], setCartItems);
     }
-    toast.success(`${qty} ${product.name} added to the cart.`);
+    toast.success(`${quantity} ${product.name} added to the cart.`);
   };
 
   const toggleCartItemQuantity = (id: string, value: string) => {
@@ -181,9 +166,6 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         cartItems,
         totalPrice,
         totalQuantities,
-        qty,
-        increaseQty,
-        decreaseQty,
         onAddToCart,
         toggleCartItemQuantity,
         onRemove,

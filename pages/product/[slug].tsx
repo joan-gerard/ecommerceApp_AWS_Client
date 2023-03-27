@@ -18,8 +18,9 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 }) => {
   const { image, name, details, price } = product;
   const [index, setIndex] = useState(0);
+  const [productQuantity, setProductQuantity] = useState(1)
 
-  const { qty, increaseQty, decreaseQty, onAddToCart, cartItems, setShowCart } =
+  const { onAddToCart, cartItems, setShowCart } =
     useStateContext();
 
   const productImageProps = useNextSanityImage(client, image[index]);
@@ -33,6 +34,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
     onAddToCart(product, qty);
 
     setShowCart(true);
+  };
+
+  const increaseQty = () => {
+    setProductQuantity((prevQty) => prevQty + 1);
+  };
+  const decreaseQty = () => {
+    setProductQuantity((prevQty) => {
+      if (prevQty - 1 < 1) return 1;
+      return prevQty - 1;
+    });
   };
 
   return (
@@ -82,7 +93,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
               <span className="minus" onClick={decreaseQty}>
                 <AiOutlineMinus />
               </span>
-              <span className="num">{qty}</span>
+              <span className="num">{productQuantity}</span>
               <span className="plus" onClick={increaseQty}>
                 <AiOutlinePlus />
               </span>
@@ -92,14 +103,14 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
             <button
               type="button"
               className="add-to-cart"
-              onClick={() => onAddToCart(product, qty)}
+              onClick={() => onAddToCart(product, productQuantity)}
             >
               Add to Cart
             </button>
             <button
               type="button"
               className="buy-now"
-              onClick={() => handleBuyNow(product, qty)}
+              onClick={() => handleBuyNow(product, productQuantity)}
             >
               Buy Now
             </button>
