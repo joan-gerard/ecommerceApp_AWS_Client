@@ -43,7 +43,7 @@ interface CartItem {
 
 interface StoredTotals {
   updatedTotalPrice: number;
-  updatedTotalQty: number ;
+  updatedTotalQty: number;
 }
 
 type ContextType = {
@@ -58,6 +58,10 @@ type ContextType = {
   setCartItems: (args: CartItem[]) => void;
   setTotalPrice: (arg: number) => void;
   setTotalQuantities: (arg: number) => void;
+  isAuthenticated: boolean;
+  setIsAuthenticated: (arg: boolean) => void;
+  showSignIn: boolean;
+  setShowSignIn: (arg: boolean) => void;
 };
 
 type HomeProps = {

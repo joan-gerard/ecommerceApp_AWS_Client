@@ -1,4 +1,7 @@
-import { handleSaveCartItems, handleSaveTotals } from "@/lib/utils";
+import {
+  handleSaveCartItems,
+  handleSaveTotals,
+} from "@/lib/utils";
 import React, {
   useState,
   useContext,
@@ -20,6 +23,11 @@ export const Context = createContext<ContextType>({
   setCartItems: (args: CartItem[]) => null,
   setTotalPrice: (arg: number) => null,
   setTotalQuantities: (arg: number) => null,
+
+  isAuthenticated: false,
+  setIsAuthenticated: (arg: boolean) => {},
+  showSignIn: false,
+  setShowSignIn: (arg: boolean) => {},
 });
 
 export const StateContext = ({ children }: { children: ReactElement }) => {
@@ -27,6 +35,9 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalQuantities, setTotalQuantities] = useState(0);
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
 
   useEffect(() => {
     setCartItems(JSON.parse(window.localStorage.getItem("cartItems") || "[]"));
@@ -44,6 +55,17 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         : updatedTotalPrice
     );
   }, []);
+
+  useEffect(() => {
+    const pattern = /^CognitoIdentityServiceProvider/;
+
+    for (let i = 0; i < window.localStorage.length; i++) {
+      let x = localStorage.key(i);
+      if (x && pattern.test(x)) {
+        setIsAuthenticated(true);
+      }
+    }
+  }, [showSignIn, showCart]);
 
   const onAddToCart = async (product: Product, quantity: number) => {
     const updatedTotalQty: number = totalQuantities + quantity;
@@ -172,6 +194,10 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         setCartItems,
         setTotalPrice,
         setTotalQuantities,
+        isAuthenticated,
+        setIsAuthenticated,
+        showSignIn,
+        setShowSignIn,
       }}
     >
       {children}

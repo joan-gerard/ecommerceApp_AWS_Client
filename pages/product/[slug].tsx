@@ -46,6 +46,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
     });
   };
 
+  // console.log({location: window.location});
+
   return (
     <div>
       <div className="product-detail-container">

@@ -322,11 +322,13 @@ span.text-red {
   margin-left: 10px;
   color: #f02d34;
 }
-.empty-cart {
+.empty-cart,
+.signin-success {
   margin: 40px;
   text-align: center;
 }
-.empty-cart h3 {
+.empty-cart h3,
+.signin-success h3 {
   font-weight: 600;
   font-size: 20px;
 }
