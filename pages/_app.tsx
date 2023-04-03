@@ -14,14 +14,12 @@ Amplify.configure(amplifyConfig);
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <StateContext>
-      <Authenticator>
-        {({ signOut, user }) => (
-          <Layout user={user} signOut={signOut}>
+      <Authenticator.Provider>
+          <Layout>
             <Toaster />
             <Component {...pageProps} />
           </Layout>
-        )}
-      </Authenticator>
+      </Authenticator.Provider>
     </StateContext>
   );
 }

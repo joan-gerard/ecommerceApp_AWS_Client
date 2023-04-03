@@ -7,12 +7,8 @@ import Footer from "./Footer";
 
 const Layout = ({
   children,
-  user,
-  signOut,
 }: {
   children: ReactElement[];
-  user: AmplifyUser | undefined;
-  signOut: ((data?: AuthEventData | undefined) => void) | undefined;
 }) => {
   return (
     <div className="layout">
@@ -20,7 +16,7 @@ const Layout = ({
         <title>My E-comm Store</title>
       </Head>
       <header>
-        <Navbar signOut={signOut} />
+        <Navbar />
       </header>
       <main className="main-container">{children}</main>
       <footer>

@@ -1,7 +1,11 @@
 import confetti from "canvas-confetti";
 import { useState, useEffect } from "react";
 import { Auth } from "aws-amplify";
-import Axios, { Method, AxiosRequestConfig } from "axios";
+import Axios, { AxiosRequestConfig } from "axios";
+import toast, { Toast } from "react-hot-toast";
+
+import getStripe from "./getStripe";
+
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const runFireworks = () => {
@@ -106,3 +110,21 @@ export const handlePlaceOrder = async (cartItems: any) => {
 
   return axiosRes;
 };
+
+export const handleCheckout = async (cartItems: CartItem[]) => {
+  const stripe = await getStripe();
+  const res: Response = await fetch("/api/stripe", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(cartItems),
+  });
+
+  if (res.status === 500) return;
+  const data = await res.json();
+
+  toast.loading("Redirecting...");
+  stripe?.redirectToCheckout({ sessionId: data.id });
+};
+
