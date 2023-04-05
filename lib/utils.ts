@@ -2,7 +2,7 @@ import confetti from "canvas-confetti";
 import { useState, useEffect } from "react";
 import { Auth } from "aws-amplify";
 import Axios, { AxiosRequestConfig } from "axios";
-import toast, { Toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import getStripe from "./getStripe";
 

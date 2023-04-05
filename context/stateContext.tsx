@@ -1,7 +1,4 @@
-import {
-  handleSaveCartItems,
-  handleSaveTotals,
-} from "@/lib/utils";
+import { handleSaveCartItems, handleSaveTotals } from "@/lib/utils";
 import React, {
   useState,
   useContext,
@@ -55,7 +52,7 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         : updatedTotalPrice
     );
   }, []);
-
+  
   useEffect(() => {
     const pattern = /^CognitoIdentityServiceProvider/;
 

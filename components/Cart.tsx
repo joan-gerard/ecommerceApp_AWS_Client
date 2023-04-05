@@ -23,7 +23,7 @@ const Cart = () => {
     isAuthenticated,
     setShowSignIn,
   } = useStateContext();
-
+  
   return (
     <div className="cart-wrapper" ref={cartRef.current}>
       <div className="cart-container">

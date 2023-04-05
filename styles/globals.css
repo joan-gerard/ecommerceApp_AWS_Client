@@ -71,6 +71,11 @@ span.text-red {
   color: gray;
   font-size: 18px;
 }
+
+.navbar-right {
+  display: flex;
+  justify-content: center;
+}
 .cart-icon {
   font-size: 25px;
   color: gray;
@@ -262,7 +267,8 @@ span.text-red {
   font-size: 14px;
   font-weight: 300;
 }
-.cart-wrapper {
+.cart-wrapper,
+.signIn-wrapper {
   width: 100vw;
   background: rgba(0, 0, 0, 0.5);
   position: fixed;
@@ -272,13 +278,18 @@ span.text-red {
   /* will-change: transform; */
   transition: all 1s ease-in-out;
 }
-.cart-container {
+.cart-container,
+.signIn-container {
   height: 100vh;
   width: 600px;
   background-color: white;
   float: right;
   padding: 40px 10px;
   position: relative;
+}
+
+.authenticator-container {
+  margin-top: 15px;
 }
 
 .footer-container {
@@ -298,7 +309,8 @@ span.text-red {
   display: flex;
   gap: 10px;
 }
-.cart-heading {
+.cart-heading,
+.signIn-heading {
   display: flex;
   align-items: center;
   /* font-size: 18px;
@@ -306,7 +318,8 @@ span.text-red {
   /* gap: 2px; */
   /* margin-left: 10px; */
 }
-.cart-heading__back-button {
+.cart-heading__back-button,
+.signIn-heading__back-button {
   border: none;
   background-color: transparent;
   font-size: 22px;

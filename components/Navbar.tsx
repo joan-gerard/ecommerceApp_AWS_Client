@@ -1,12 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { HiOutlineLogout, HiOutlineLogin } from "react-icons/hi";
+import { CgProfile } from "react-icons/cg";
 import { useAuthenticator } from "@aws-amplify/ui-react";
+import { Tooltip, Grid } from "@nextui-org/react";
 
 import { useStateContext } from "../context/stateContext";
 import Cart from "./Cart";
 import SignIn from "./SignIn";
+import Account from "./Account";
 
 const Navbar = () => {
   const {
@@ -14,8 +16,6 @@ const Navbar = () => {
     setShowCart,
     totalQuantities,
     showSignIn,
-    setIsAuthenticated,
-    setShowSignIn,
   } = useStateContext();
 
   const displayTotalQty =
@@ -23,16 +23,12 @@ const Navbar = () => {
 
   const { user, signOut } = useAuthenticator((context) => [context.user]);
 
-  const handleSignOut = () => {
-    signOut();
-    setIsAuthenticated(false);
-  };
   return (
     <div className="navbar-container">
       <p className="logo">
         <Link href="/">Amazing Store</Link>
       </p>
-      <div>
+      <div className="navbar-right">
         <button
           type="button"
           className="cart-icon"
@@ -43,25 +39,29 @@ const Navbar = () => {
             <span className="cart-item-qty">{displayTotalQty}</span>
           )}
         </button>
-        {user ? (
-          <button
-            type="button"
-            className="cart-icon"
-            onClick={() => handleSignOut()}
-          >
-            {/* <button type="button" className="cart-icon"> */}
-            <HiOutlineLogout />
-          </button>
-        ) : (
-          <button
-            type="button"
-            className="cart-icon"
-            onClick={() => setShowSignIn(true)}
-          >
-            {/* <button type="button" className="cart-icon"> */}
-            <HiOutlineLogin />
-          </button>
-        )}
+
+        <Grid.Container
+          gap={2}
+          css={{
+            marginLeft: "1px",
+            fontSize: "22px",
+            cursor: "pointer",
+          }}
+        >
+          <Grid>
+            <Tooltip
+              hideArrow
+              placement="bottomEnd"
+              content={<Account />}
+              trigger="click"
+              css={{
+                boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px;",
+              }}
+            >
+              <CgProfile style={{ color: "gray" }} />
+            </Tooltip>
+          </Grid>
+        </Grid.Container>
       </div>
       {showCart && <Cart />}
       {showSignIn && <SignIn />}
