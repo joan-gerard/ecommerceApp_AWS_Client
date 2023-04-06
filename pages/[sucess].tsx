@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { BsBagCheckFill } from "react-icons/bs";
-import { Auth } from "aws-amplify";
 import Axios, { Method, AxiosRequestConfig } from "axios";
 
 import { useStateContext } from "@/context/stateContext";
@@ -9,15 +8,21 @@ import {
   handlePlaceOrder,
   handleRemoveStorageItems,
   runFireworks,
+  getCognitoUser,
 } from "@/lib/utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const Success = () => {
-  const { setCartItems, setTotalPrice, setTotalQuantities, cartItems } =
-    useStateContext();
-
-  const [ordedPlaced, setOrdedPlaced] = useState([]);
+  const {
+    setCartItems,
+    setTotalPrice,
+    setTotalQuantities,
+    cognitoUser,
+    setCognitoUser,
+    setIsAuthenticated,
+  } = useStateContext();
+  const [orderNumber, setOrderNumber] = useState("");
 
   useEffect(() => {
     const queryString = window.location.search;
@@ -40,13 +45,24 @@ const Success = () => {
         (res) => res.data.data
       );
 
-      handlePlaceOrder(axiosRes);
+      const placedOrderSuccess = await handlePlaceOrder(axiosRes).then(
+        (res) => res.data.message
+      );
+
+      setOrderNumber(placedOrderSuccess);
     };
 
     getData();
 
+    const checkoutUser = window.localStorage.getItem("checkoutUser");
+
+    if (!checkoutUser) {
+      console.error("No user was found");
+      return;
+    }
+
     // Reset data
-    handleRemoveStorageItems();
+    handleRemoveStorageItems(checkoutUser);
     setCartItems([]);
     setTotalPrice(0);
     setTotalQuantities(0);
@@ -61,6 +77,9 @@ const Success = () => {
           <BsBagCheckFill />
         </p>
         <h2>Thank you for your order</h2>
+        {orderNumber != "" ? (
+          <p className="email-msg">Your order number: {orderNumber}</p>
+        ) : null}
         <p className="email-msg">Check your email inbox for a confirmation</p>
         <p className="description">
           If you have any question, please email

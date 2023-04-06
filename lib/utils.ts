@@ -1,5 +1,5 @@
 import confetti from "canvas-confetti";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import { Auth } from "aws-amplify";
 import Axios, { AxiosRequestConfig } from "axios";
 import toast from "react-hot-toast";
@@ -52,10 +52,12 @@ export const useClientSideHydration = () => {
 };
 
 export const handleSaveCartItems = (
+  cognitoUser: string,
   cartItems: CartItem[],
   cb: (arg0: CartItem[]) => void
 ) => {
-  window.localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  const user = cognitoUser === "" ? "guest" : cognitoUser;
+  window.localStorage.setItem(`${user}.items`, JSON.stringify(cartItems));
 
   cb(cartItems);
 };
@@ -64,10 +66,13 @@ export const handleSaveTotals = (
   totalPrice: number,
   totalQty: number,
   cb1: (arg0: number) => void,
-  cb2: (arg0: number) => void
+  cb2: (arg0: number) => void,
+  cognitoUser: string
 ) => {
+  const user = cognitoUser === "" ? "guest" : cognitoUser;
+
   window.localStorage.setItem(
-    "totals",
+    `${user}.totals`,
     JSON.stringify({
       updatedTotalPrice: totalPrice,
       updatedTotalQty: totalQty,
@@ -77,9 +82,12 @@ export const handleSaveTotals = (
   cb2(totalQty);
 };
 
-export const handleRemoveStorageItems = () => {
-  window.localStorage.removeItem("cartItems");
-  window.localStorage.removeItem("totals");
+export const handleRemoveStorageItems = (cognitoUser: string) => {
+  const user = cognitoUser === "" ? "guest" : cognitoUser;
+
+  window.localStorage.removeItem(`${user}.items`);
+  window.localStorage.removeItem(`${user}.totals`);
+  window.localStorage.removeItem("checkoutUser");
 };
 
 export const handlePlaceOrder = async (cartItems: any) => {
@@ -111,7 +119,11 @@ export const handlePlaceOrder = async (cartItems: any) => {
   return axiosRes;
 };
 
-export const handleCheckout = async (cartItems: CartItem[]) => {
+export const handleCheckout = async (
+  cartItems: CartItem[],
+  cognitoUser: string
+) => {
+  window.localStorage.setItem("checkoutUser", cognitoUser);
   const stripe = await getStripe();
   const res: Response = await fetch("/api/stripe", {
     method: "POST",
@@ -128,3 +140,16 @@ export const handleCheckout = async (cartItems: CartItem[]) => {
   stripe?.redirectToCheckout({ sessionId: data.id });
 };
 
+export const getCognitoUser = (cb1: any, cb2: any) => {
+  const startPattern = /^CognitoIdentityServiceProvider/;
+  const endPattern = /userData$/;
+
+  for (let i = 0; i < window.localStorage.length; i++) {
+    let x = localStorage.key(i);
+    if (x && startPattern.test(x) && endPattern.test(x)) {
+      const cognitoUserDataArr = x.split(".");
+      cb1(cognitoUserDataArr[2]);
+      cb2(true);
+    }
+  }
+};
