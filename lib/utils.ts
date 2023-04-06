@@ -127,4 +127,3 @@ export const handleCheckout = async (cartItems: CartItem[]) => {
   toast.loading("Redirecting...");
   stripe?.redirectToCheckout({ sessionId: data.id });
 };
-

@@ -1,10 +1,11 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { AiOutlineLeft } from "react-icons/ai";
 
 import { useStateContext } from "@/context/stateContext";
 import CartIsEmpty from "./CartIsEmpty";
 import CartItem from "./CartItem";
 import { handleCheckout } from "@/lib/utils";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 
 const Cart = () => {
   // const productImageProps = useNextSanityImage(client, image[index]);
@@ -23,7 +24,11 @@ const Cart = () => {
     isAuthenticated,
     setShowSignIn,
   } = useStateContext();
-  
+
+  if (isAuthenticated) {
+    const { user } = useAuthenticator((context) => [context.user]);
+  }
+
   return (
     <div className="cart-wrapper" ref={cartRef.current}>
       <div className="cart-container">

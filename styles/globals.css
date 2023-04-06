@@ -605,7 +605,7 @@ span.text-red {
   font-size: 40px;
   color: #324d67;
 }
-.success .email-msg {
+.success {
   font-size: 16px;
   font-weight: 600;
   text-align: center;
@@ -614,7 +614,8 @@ span.text-red {
   font-size: 20px;
   font-weight: 600;
 }
-.success .description {
+.success .description,
+.success .email-msg {
   font-size: 16px;
   font-weight: 600;
   text-align: center;
