@@ -23,6 +23,7 @@ const Cart = () => {
     setShowCart,
     isAuthenticated,
     setShowSignIn,
+    cognitoUser
   } = useStateContext();
 
   if (isAuthenticated) {
@@ -64,7 +65,7 @@ const Cart = () => {
                 <button
                   type="button"
                   className="btn"
-                  onClick={() => handleCheckout(cartItems)}
+                  onClick={() => handleCheckout(cartItems, cognitoUser)}
                 >
                   Pay with Stripe
                 </button>

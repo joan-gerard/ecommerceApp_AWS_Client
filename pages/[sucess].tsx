@@ -8,12 +8,20 @@ import {
   handlePlaceOrder,
   handleRemoveStorageItems,
   runFireworks,
+  getCognitoUser,
 } from "@/lib/utils";
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const Success = () => {
-  const { setCartItems, setTotalPrice, setTotalQuantities } = useStateContext();
+  const {
+    setCartItems,
+    setTotalPrice,
+    setTotalQuantities,
+    cognitoUser,
+    setCognitoUser,
+    setIsAuthenticated,
+  } = useStateContext();
   const [orderNumber, setOrderNumber] = useState("");
 
   useEffect(() => {
@@ -46,8 +54,15 @@ const Success = () => {
 
     getData();
 
+    const checkoutUser = window.localStorage.getItem("checkoutUser");
+
+    if (!checkoutUser) {
+      console.error("No user was found");
+      return;
+    }
+
     // Reset data
-    handleRemoveStorageItems();
+    handleRemoveStorageItems(checkoutUser);
     setCartItems([]);
     setTotalPrice(0);
     setTotalQuantities(0);

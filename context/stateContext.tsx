@@ -1,4 +1,8 @@
-import { handleSaveCartItems, handleSaveTotals } from "@/lib/utils";
+import {
+  handleSaveCartItems,
+  handleSaveTotals,
+  getCognitoUser,
+} from "@/lib/utils";
 import React, {
   useState,
   useContext,
@@ -14,15 +18,17 @@ export const Context = createContext<ContextType>({
   cartItems: [],
   totalPrice: 0,
   totalQuantities: 0,
-  onAddToCart: (product: Product, quantity: number) => null,
-  toggleCartItemQuantity: (id: string, value: string) => null,
-  onRemove: (cartItem: CartItem) => null,
+  onAddToCart: (product: Product, quantity: number, user: string) => null,
+  toggleCartItemQuantity: (id: string, value: string, user: string) => null,
+  onRemove: (cartItem: CartItem, user: string) => null,
   setCartItems: (args: CartItem[]) => null,
   setTotalPrice: (arg: number) => null,
   setTotalQuantities: (arg: number) => null,
 
   isAuthenticated: false,
   setIsAuthenticated: (arg: boolean) => {},
+  cognitoUser: "",
+  setCognitoUser: (args: string) => null,
   showSignIn: false,
   setShowSignIn: (arg: boolean) => {},
 });
@@ -34,13 +40,17 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
   const [totalQuantities, setTotalQuantities] = useState(0);
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [cognitoUser, setCognitoUser] = useState("");
   const [showSignIn, setShowSignIn] = useState(false);
 
   useEffect(() => {
-    setCartItems(JSON.parse(window.localStorage.getItem("cartItems") || "[]"));
+    const user = cognitoUser === "" ? "guest" : cognitoUser;
+    setCartItems(
+      JSON.parse(window.localStorage.getItem(`${user}.items`) || "[]")
+    );
 
     const { updatedTotalQty, updatedTotalPrice }: StoredTotals = JSON.parse(
-      window.localStorage.getItem("totals") || "{}"
+      window.localStorage.getItem(`${user}.totals`) || "{}"
     );
 
     setTotalQuantities(
@@ -51,20 +61,17 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         ? 0
         : updatedTotalPrice
     );
-  }, []);
-  
-  useEffect(() => {
-    const pattern = /^CognitoIdentityServiceProvider/;
+  }, [cognitoUser]);
 
-    for (let i = 0; i < window.localStorage.length; i++) {
-      let x = localStorage.key(i);
-      if (x && pattern.test(x)) {
-        setIsAuthenticated(true);
-      }
-    }
+  useEffect(() => {
+    getCognitoUser(setCognitoUser, setIsAuthenticated);
   }, [showSignIn, showCart]);
 
-  const onAddToCart = async (product: Product, quantity: number) => {
+  const onAddToCart = async (
+    product: Product,
+    quantity: number,
+    user: string
+  ) => {
     const updatedTotalQty: number = totalQuantities + quantity;
     const updatedTotalPrice = totalPrice + product.price * quantity;
 
@@ -72,7 +79,8 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
       updatedTotalPrice,
       updatedTotalQty,
       setTotalPrice,
-      setTotalQuantities
+      setTotalQuantities,
+      user
     );
 
     const checkIfProductInCart = cartItems?.find((item) => {
@@ -90,14 +98,18 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         return cartProduct;
       });
 
-      handleSaveCartItems(updatedCartItems, setCartItems);
+      handleSaveCartItems(user, updatedCartItems, setCartItems);
     } else {
-      handleSaveCartItems([...cartItems, { product, quantity }], setCartItems);
+      handleSaveCartItems(
+        user,
+        [...cartItems, { product, quantity }],
+        setCartItems
+      );
     }
     toast.success(`${quantity} ${product.name} added to the cart.`);
   };
 
-  const toggleCartItemQuantity = (id: string, value: string) => {
+  const toggleCartItemQuantity = (id: string, value: string, user: string) => {
     const foundProduct = cartItems.find((item) => item.product._id === id);
     const index = cartItems.findIndex((item) => item.product._id === id);
 
@@ -110,7 +122,7 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
           return item;
         });
 
-        handleSaveCartItems(updatedCartItems, setCartItems);
+        handleSaveCartItems(user, updatedCartItems, setCartItems);
 
         const newTotalPrice = updatedCartItems.reduce((a, b) => {
           return a + b.product.price * b.quantity;
@@ -123,7 +135,8 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
           newTotalPrice,
           newTotalQty,
           setTotalPrice,
-          setTotalQuantities
+          setTotalQuantities,
+          user
         );
       } else if (value === "dec") {
         if (foundProduct.quantity > 1) {
@@ -134,7 +147,7 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
             return item;
           });
 
-          handleSaveCartItems(updatedCartItems, setCartItems);
+          handleSaveCartItems(user, updatedCartItems, setCartItems);
 
           const newTotalPrice = updatedCartItems.reduce((a, b) => {
             return a + b.product.price * b.quantity;
@@ -147,19 +160,20 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
             newTotalPrice,
             newTotalQty,
             setTotalPrice,
-            setTotalQuantities
+            setTotalQuantities,
+            user
           );
         }
       }
     }
   };
 
-  const onRemove = (cartItem: CartItem) => {
+  const onRemove = (cartItem: CartItem, user: string) => {
     const updatedCartItems = cartItems.filter(
       (item) => item.product._id != cartItem.product._id
     );
 
-    handleSaveCartItems(updatedCartItems, setCartItems);
+    handleSaveCartItems(user, updatedCartItems, setCartItems);
 
     const newTotalQty = updatedCartItems.reduce((a, b) => {
       return a + b.quantity;
@@ -173,7 +187,8 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
       newTotalPrice,
       newTotalQty,
       setTotalPrice,
-      setTotalQuantities
+      setTotalQuantities,
+      user
     );
   };
 
@@ -193,6 +208,8 @@ export const StateContext = ({ children }: { children: ReactElement }) => {
         setTotalQuantities,
         isAuthenticated,
         setIsAuthenticated,
+        cognitoUser,
+        setCognitoUser,
         showSignIn,
         setShowSignIn,
       }}

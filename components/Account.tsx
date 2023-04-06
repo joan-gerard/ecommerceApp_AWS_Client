@@ -4,12 +4,13 @@ import { useStateContext } from "@/context/stateContext";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
 const Account = () => {
-  const { showSignIn, setIsAuthenticated, setShowSignIn, isAuthenticated } =
+  const { showSignIn, setIsAuthenticated, setShowSignIn, isAuthenticated, setCognitoUser } =
     useStateContext();
   const { user, signOut } = useAuthenticator((context) => [context.user]);
 
   const handleSignOut = () => {
     signOut();
+    setCognitoUser('')
     setIsAuthenticated(false);
   };
 

@@ -7,6 +7,7 @@ import {
   AiFillStar,
   AiOutlineStar,
 } from "react-icons/ai";
+import { useAuthenticator } from "@aws-amplify/ui-react";
 
 import { client } from "../../lib/client";
 import { Product } from "@/components";
@@ -18,10 +19,14 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
 }) => {
   const { image, name, details, price } = product;
   const [index, setIndex] = useState(0);
-  const [productQuantity, setProductQuantity] = useState(1)
+  const [productQuantity, setProductQuantity] = useState(1);
 
-  const { onAddToCart, cartItems, setShowCart } =
+  const { onAddToCart, cartItems, setShowCart, isAuthenticated, cognitoUser } =
     useStateContext();
+
+  // if (isAuthenticated) {
+    const { user } = useAuthenticator((context) => [context.user]);
+  // }
 
   const productImageProps = useNextSanityImage(client, image[index]);
   const updatedproductImageProps = {
@@ -30,8 +35,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
     width: 250,
   };
 
-  const handleBuyNow = async (product: Product, qty: number) => {
-    onAddToCart(product, qty);
+  const handleBuyNow = async (product: Product, qty: number, user: string) => {
+    onAddToCart(product, qty, user);
 
     setShowCart(true);
   };
@@ -103,14 +108,16 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({
             <button
               type="button"
               className="add-to-cart"
-              onClick={() => onAddToCart(product, productQuantity)}
+              onClick={() => onAddToCart(product, productQuantity, cognitoUser)}
             >
               Add to Cart
             </button>
             <button
               type="button"
               className="buy-now"
-              onClick={() => handleBuyNow(product, productQuantity)}
+              onClick={() =>
+                handleBuyNow(product, productQuantity, cognitoUser)
+              }
             >
               Buy Now
             </button>
