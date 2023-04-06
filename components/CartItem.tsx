@@ -7,7 +7,7 @@ import { client } from "../lib/client";
 import { useStateContext } from "@/context/stateContext";
 
 const CartItem: React.FC<CartItemProps> = ({ cartItem }) => {
-  const { toggleCartItemQuantity, onRemove } = useStateContext();
+  const { toggleCartItemQuantity, onRemove, cognitoUser } = useStateContext();
 
   return (
     <div className="product">
@@ -27,7 +27,7 @@ const CartItem: React.FC<CartItemProps> = ({ cartItem }) => {
               <span
                 className="minus"
                 onClick={() =>
-                  toggleCartItemQuantity(cartItem.product._id, "dec")
+                  toggleCartItemQuantity(cartItem.product._id, "dec", cognitoUser)
                 }
               >
                 <AiOutlineMinus />
@@ -36,7 +36,7 @@ const CartItem: React.FC<CartItemProps> = ({ cartItem }) => {
               <span
                 className="plus"
                 onClick={() =>
-                  toggleCartItemQuantity(cartItem.product._id, "inc")
+                  toggleCartItemQuantity(cartItem.product._id, "inc", cognitoUser)
                 }
               >
                 <AiOutlinePlus />
@@ -46,7 +46,7 @@ const CartItem: React.FC<CartItemProps> = ({ cartItem }) => {
           <button
             type="button"
             className="remove-item"
-            onClick={() => onRemove(cartItem)}
+            onClick={() => onRemove(cartItem, cognitoUser)}
           >
             <TiDeleteOutline />
           </button>
