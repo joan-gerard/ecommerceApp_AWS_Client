@@ -8,7 +8,7 @@ const IsSignedIn = () => {
   useEffect(() => {
     setShowSignIn(false);
     // handleCheckout(cartItems)
-  }, []);
+  }, [setShowSignIn]);
 
   return (
     <div className="signin-success">

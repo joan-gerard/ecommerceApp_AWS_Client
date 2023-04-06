@@ -26,10 +26,6 @@ const Cart = () => {
     cognitoUser
   } = useStateContext();
 
-  if (isAuthenticated) {
-    const { user } = useAuthenticator((context) => [context.user]);
-  }
-
   return (
     <div className="cart-wrapper" ref={cartRef.current}>
       <div className="cart-container">
