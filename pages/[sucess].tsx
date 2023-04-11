@@ -40,24 +40,35 @@ const Success = () => {
       url: `https://api.stripe.com/v1/checkout/sessions/${sessionID}/line_items?limit=5`,
     };
 
-    const getData = async () => {
+    const getData = async (paymentSessionId: string | null) => {
       const axiosRes = await Axios.request(requestConfig).then(
         (res) => res.data.data
       );
 
-      const placedOrderSuccess = await handlePlaceOrder(axiosRes).then(
-        (res) => res.data.message
-      );
+      // check if order exists
+      const isOrderPresent = await Axios.get(
+        `https://kiwpny70ba.execute-api.eu-central-1.amazonaws.com/dev/order/${paymentSessionId}`
+      )
+        .then((res) => res)
+        .catch((err) => console.log({ err }));
 
-      setOrderNumber(placedOrderSuccess);
+      if (isOrderPresent === undefined) {
+        const placedOrderSuccess = await handlePlaceOrder(
+          axiosRes,
+          paymentSessionId
+        ).then((res) => res.data.message);
+
+        setOrderNumber(placedOrderSuccess);
+      } else {
+        return;
+      }
     };
 
-    getData();
+    getData(sessionID);
 
     const checkoutUser = window.localStorage.getItem("checkoutUser");
 
     if (!checkoutUser) {
-      console.error("No user was found");
       return;
     }
 
