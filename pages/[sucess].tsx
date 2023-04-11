@@ -60,6 +60,7 @@ const Success = () => {
 
         setOrderNumber(placedOrderSuccess);
       } else {
+        setOrderNumber(isOrderPresent.data.orderId);
         return;
       }
     };
