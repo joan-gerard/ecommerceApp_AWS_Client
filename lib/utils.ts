@@ -90,7 +90,7 @@ export const handleRemoveStorageItems = (cognitoUser: string) => {
   window.localStorage.removeItem("checkoutUser");
 };
 
-export const handlePlaceOrder = async (cartItems: any) => {
+export const handlePlaceOrder = async (cartItems: any, paymentSessionId: string | null) => {
   const user = await Auth.currentSession();
   const headers = {
     Authorization: `Bearer ${user.getIdToken().getJwtToken()}`,
@@ -105,6 +105,7 @@ export const handlePlaceOrder = async (cartItems: any) => {
 
   const data = {
     items: formattedData,
+    paymentSessionId
   };
 
   const requestConfig: AxiosRequestConfig = {
