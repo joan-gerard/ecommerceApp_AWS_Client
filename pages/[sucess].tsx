@@ -50,7 +50,7 @@ const Success = () => {
         `https://kiwpny70ba.execute-api.eu-central-1.amazonaws.com/dev/order/${paymentSessionId}`
       )
         .then((res) => res)
-        .catch((err) => console.log({ err }));
+        .catch((err) => console.error(err));
 
       if (isOrderPresent === undefined) {
         const placedOrderSuccess = await handlePlaceOrder(
@@ -60,6 +60,8 @@ const Success = () => {
 
         setOrderNumber(placedOrderSuccess);
       } else {
+        console.log({isOrderPresent})
+        setOrderNumber(isOrderPresent.data.orderId);
         return;
       }
     };
@@ -80,6 +82,8 @@ const Success = () => {
     runFireworks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  console.log({orderNumber})
 
   return (
     <div className="success-wrapper">
