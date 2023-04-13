@@ -60,7 +60,6 @@ const Success = () => {
 
         setOrderNumber(placedOrderSuccess);
       } else {
-        console.log({isOrderPresent})
         setOrderNumber(isOrderPresent.data.orderId);
         return;
       }
@@ -82,8 +81,6 @@ const Success = () => {
     runFireworks();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  console.log({orderNumber})
 
   return (
     <div className="success-wrapper">
