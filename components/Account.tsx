@@ -1,16 +1,22 @@
 import React from "react";
+import Link from "next/link";
 import { Button, Grid } from "@nextui-org/react";
 import { useStateContext } from "@/context/stateContext";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
 const Account = () => {
-  const { showSignIn, setIsAuthenticated, setShowSignIn, isAuthenticated, setCognitoUser } =
-    useStateContext();
+  const {
+    showSignIn,
+    setIsAuthenticated,
+    setShowSignIn,
+    isAuthenticated,
+    setCognitoUser,
+  } = useStateContext();
   const { user, signOut } = useAuthenticator((context) => [context.user]);
 
   const handleSignOut = () => {
     signOut();
-    setCognitoUser('')
+    setCognitoUser("");
     setIsAuthenticated(false);
   };
 
@@ -34,9 +40,11 @@ const Account = () => {
                 },
               }}
             >
-              <Button size="sm" light>
-                My Account
-              </Button>
+              <Link href="/account" passHref>
+                <Button size="sm" light>
+                  My Account
+                </Button>
+              </Link>
             </Grid>
             <Grid
               css={{
