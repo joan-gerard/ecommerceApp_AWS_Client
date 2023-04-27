@@ -4,7 +4,7 @@ import { Button, Grid } from "@nextui-org/react";
 import { useStateContext } from "@/context/stateContext";
 import { useAuthenticator } from "@aws-amplify/ui-react";
 
-const Account = () => {
+const Nav = () => {
   const {
     showSignIn,
     setIsAuthenticated,
@@ -40,11 +40,11 @@ const Account = () => {
                 },
               }}
             >
-              <Link href="/account" passHref>
+              {/* <Link href="/account" passHref> */}
                 <Button size="sm" light>
                   My Account
                 </Button>
-              </Link>
+              {/* </Link> */}
             </Grid>
             <Grid
               css={{
@@ -79,4 +79,4 @@ const Account = () => {
   );
 };
 
-export default Account;
+export default Nav;

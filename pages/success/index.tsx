@@ -14,14 +14,7 @@ import {
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 const Success = () => {
-  const {
-    setCartItems,
-    setTotalPrice,
-    setTotalQuantities,
-    cognitoUser,
-    setCognitoUser,
-    setIsAuthenticated,
-  } = useStateContext();
+  const { setCartItems, setTotalPrice, setTotalQuantities } = useStateContext();
   const [orderNumber, setOrderNumber] = useState("");
 
   useEffect(() => {

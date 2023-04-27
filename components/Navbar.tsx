@@ -8,7 +8,7 @@ import { Tooltip, Grid } from "@nextui-org/react";
 import { useStateContext } from "../context/stateContext";
 import Cart from "./Cart";
 import SignIn from "./SignIn";
-import Account from "./Account";
+import Nav from "./Nav";
 
 const Navbar = () => {
   const {
@@ -52,7 +52,7 @@ const Navbar = () => {
             <Tooltip
               hideArrow
               placement="bottomEnd"
-              content={<Account />}
+              content={<Nav />}
               trigger="click"
               css={{
                 boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px;",

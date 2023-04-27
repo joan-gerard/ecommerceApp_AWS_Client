@@ -576,8 +576,9 @@ span.text-red {
   color: #f02d34;
 }
 .success-wrapper,
-.cancel-wrapper {
-  background-color: white;
+.cancel-wrapper,
+.account-wrapper {
+  /* background-color: red; */
   min-height: 60vh;
 }
 .success,
@@ -628,6 +629,13 @@ span.text-red {
 }
 .product-max-qty {
   margin-top: 10px;
+}
+
+.order {
+  border: 1px;
+  border-style: solid;
+  border-radius: 8px;
+  margin-bottom: 5px;
 }
 
 @media screen and (max-width: 800px) {
@@ -751,7 +759,8 @@ span.text-red {
     width: 550%;
   }
   .success-wrapper,
-  .cancel-wrapper {
+  .cancel-wrapper,
+  .account-wrapper {
     min-height: 69vh;
   }
   .success,
